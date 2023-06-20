@@ -1,31 +1,20 @@
-from flask import Flask, request, jsonify
+#imports for posts/gets
+from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
+
+#imports for ChatGPT
 import featureform as ff
 from featureform import local
 from io import StringIO
 import pandas as pd
 from sentence_transformers import SentenceTransformer
-
 import openai
 
 
-def getResponse(message):
-
-    client = ff.Client(local=True)
-
-    chapters = local.register_directory(
-        name="dpv-chapters",
-        path="data/files",
-        description="Text from DPV Chapters",
-    )
-
-    ed_posts = local.register_directory(
-        name='new170-edstem',
-        path='data/edstem',
-        description='170 Posts from edstem',
-    )
+classes_supported = ["170"]
 
 
-
+def registerPinecone():
     pinecone = ff.register_pinecone(
         name="pinecone",
         project_id="56ea356",
@@ -57,6 +46,7 @@ def getResponse(message):
         return r_df
 
 
+def hi():
     @local.df_transformation(inputs=[process_chapter_files])
     def excerpt_preprocess_df(chapter_df):
         # adding a unique identifier for every column
@@ -159,17 +149,21 @@ def getResponse(message):
 
 #***********BEFORE TESTING PLEASE START THE SERVER BY RUNNING: python server.py    
 app = Flask(__name__)
+CORS(app)
+
+
 
 @app.route('/process', methods=['POST'])
 def process():
-    message = request.json['message']
 
+    if request.method == 'POST':
+        message = request.form.get('data')
+        # print(dataProcess(classes_supported[0]))
+        return "Hello"
+
+    return 'nothing is happening'
     # Process the message using your Python logic
-    response = getResponse(message)
-    print(message)
-    print(response)
     
-    return jsonify({'response': response})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='127.0.0.1', port=5000, debug=True)

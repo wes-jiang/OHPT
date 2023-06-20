@@ -1,6 +1,6 @@
 document.getElementById("send-button").addEventListener("click", function() {
     sendMessage();
-    console.log(okay);
+    console.log("okay");
 });
 
 document.getElementById("message-input").addEventListener("keydown", function(event) {
@@ -8,36 +8,34 @@ document.getElementById("message-input").addEventListener("keydown", function(ev
     sendMessage();
     }
 });
-
 function sendMessage() {
     var message = document.getElementById("message-input").value;
-    //appendMessage() called somewhere
 
-    //send message to the backend
     $.ajax({
-        url: '/process',
+        url: 'http://127.0.0.1:5000/process',
         type: 'POST',
         data: {'data': message},
         success: function(response) {
-            document.getElementById('output').innerHTML = response; //
+            appendMessage(message, "assistant-message")
+            appendMessage(response, "assistant-message")
+            document.getElementById("message-input").value = "";
         },
         error: function(error) {
             console.log(error);
+            console.log("here error")
         }
     });
-
-
-    if (messsage != ""){ //nonempty message
-        appendMessage(message) 
-
-        //send to python server
-    }
 
 
 }
 
 function appendMessage(message, messageClass) {
-    
-}
+    var chatBody = document.getElementById("chat-body");
+    var messageElement = document.createElement("div");
+    messageElement.textContent = message;
+    messageElement.classList.add("chat-message", messageClass);
+    chatBody.appendChild(messageElement);
+    chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom of the chat window
+  }
 
 
