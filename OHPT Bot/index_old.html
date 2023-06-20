@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name = "viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+        <title>Document</title>
+        <link rel="stylesheet" href="./style.css"/>
+    </head>
+
+<head>
+    <title>ChatGPT Window</title>
+    <style>
+      /* CSS styles for the chat window */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .chat-window {
+        max-width: 600px;
+        margin: 50px auto;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      }
+      
+      .chat-header {
+        background-color: #f2f2f2;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        border-bottom: 1px solid #e1e1e1;
+      }
+      
+      .chat-body {
+        padding: 10px;
+        overflow-y: scroll;
+        max-height: 400px;
+      }
+      
+      .chat-message {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        background-color: #e1e1e1;
+      }
+      
+      .user-message {
+        background-color: #dcf8c6;
+      }
+      
+      .assistant-message {
+        background-color: #ffffff;
+        text-align: right;
+      }
+      
+      .chat-input {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background-color: #f2f2f2;
+        border-top: 1px solid #e1e1e1;
+      }
+      
+      .chat-input input[type="text"] {
+        flex: 1;
+        padding: 5px;
+        border-radius: 5px;
+        border: none;
+      }
+      
+      .chat-input button {
+        padding: 5px 10px;
+        margin-left: 10px;
+        border-radius: 5px;
+        border: none;
+        background-color: #4caf50;
+        color: #ffffff;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-window">
+      <div class="chat-header">
+        Personal Office Hour Assistant
+      </div>
+      <div class="chat-body" id="chat-body">
+        <div class="chat-message assistant-message">
+          Welcome to OHPT! How can I assist you today?
+        </div>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="message-input" placeholder="Type your message..." />
+        <button id="send-button">Send</button>
+      </div>
+    </div>
+  
+    <script>
+      // JavaScript code for handling user interactions
+      document.getElementById("send-button").addEventListener("click", function() {
+        sendMessage();
+      });
+      
+      document.getElementById("message-input").addEventListener("keydown", function(event) {
+        if (event.keyCode === 13) { // Enter key
+          sendMessage();
+        }
+      });
+      
+      function sendMessage() {
+        var message = document.getElementById("message-input").value;
+        if (message !== "") {
+            appendMessage(message, "user-message");
+            document.getElementById("message-input").value = "";
+            
+            // Send message to the Python server
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://127.0.0.1:5000/process-message", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) { 
+                var response = JSON.parse(xhr.responseText).response;
+                appendMessage(response, "assistant-message");
+            }
+            };
+            xhr.send(JSON.stringify({ message: message }));
+        }
+      }
+      
+      function appendMessage(message, messageClass) {
+        var chatBody = document.getElementById("chat-body");
+        var messageElement = document.createElement("div");
+        messageElement.textContent = message;
+        messageElement.classList.add("chat-message", messageClass);
+        chatBody.appendChild(messageElement);
+        chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom of the chat window
+      }
+    </script>
+  </body>
+    <body_2>
+        <svg id="logo" width="325" height="105" viewBox="0 0 505 143" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M70.6 142.4C57.6667 142.4 45.8667 139.4 35.2 133.4C24.5333 127.267 16.0667 118.8 9.80001 108C3.66667 97.0667 0.600006 84.8 0.600006 71.2C0.600006 57.6 3.66667 45.4 9.80001 34.6C16.0667 23.6667 24.5333 15.2 35.2 9.2C45.8667 3.06666 57.6667 0 70.6 0C83.6667 0 95.5333 3.06666 106.2 9.2C116.867 15.2 125.267 23.6 131.4 34.4C137.533 45.2 140.6 57.4667 140.6 71.2C140.6 84.9333 137.533 97.2 131.4 108C125.267 118.8 116.867 127.267 106.2 133.4C95.5333 139.4 83.6667 142.4 70.6 142.4ZM70.6 126.6C80.3333 126.6 89.0667 124.333 96.8 119.8C104.667 115.267 110.8 108.8 115.2 100.4C119.733 92 122 82.2667 122 71.2C122 60 119.733 50.2667 115.2 42C110.8 33.6 104.733 27.1333 97 22.6C89.2667 18.0667 80.4667 15.8 70.6 15.8C60.7333 15.8 51.9333 18.0667 44.2 22.6C36.4667 27.1333 30.3333 33.6 25.8 42C21.4 50.2667 19.2 60 19.2 71.2C19.2 82.2667 21.4 92 25.8 100.4C30.3333 108.8 36.4667 115.267 44.2 119.8C52.0667 124.333 60.8667 126.6 70.6 126.6Z" stroke="white" stroke-width="5"/>
+            <path d="M272.027 1.6V141H253.827V77.8H182.827V141H164.627V1.6H182.827V62.8H253.827V1.6H272.027Z" stroke="white" stroke-width="5"/>
+            <path d="M396.303 42.4C396.303 54 392.303 63.6667 384.303 71.4C376.436 79 364.37 82.8 348.103 82.8H321.303V141H303.103V1.6H348.103C363.836 1.6 375.77 5.4 383.903 13C392.17 20.6 396.303 30.4 396.303 42.4ZM348.103 67.8C358.236 67.8 365.703 65.6 370.503 61.2C375.303 56.8 377.703 50.5333 377.703 42.4C377.703 25.2 367.836 16.6 348.103 16.6H321.303V67.8H348.103Z" stroke="white" stroke-width="5"/>
+            <path d="M504.723 1.6V16.4H466.723V141H448.523V16.4H410.323V1.6H504.723Z" stroke="white" stroke-width="5"/>
+            </svg>            
+        <script src="app.js">
+        </script>
+    </body_2>
+</html>
