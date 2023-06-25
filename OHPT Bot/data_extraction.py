@@ -1,11 +1,10 @@
 #I hope to change this where it is more 
 #advanced in extracting math equations/formulas
 
-import PyPDF2
-import regex as re
-import csv
-
-from PyPDF2 import PdfReader
+# import PyPDF2
+# import regex as re
+# import csv
+# from PyPDF2 import PdfReader
 
 
 # def extract_text_from_pdf(pdf_path):
