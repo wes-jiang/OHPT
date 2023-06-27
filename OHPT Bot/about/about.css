@@ -1,0 +1,326 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900");
+@import url('https://fonts.googleapis.com/css?family=Roboto:300');
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --color-primary: #f6aca2;
+  --color-secondary: #f49b90;
+  --color-tertiary: #f28b7d;
+  --color-quaternary: #f07a6a;
+  --color-quinary: #ee6352;
+  /*
+  --color-primary: #5192ED;
+  --color-secondary: #69A1F0;
+  --color-tertiary: #7EAEF2;
+  --color-quaternary: #90BAF5;
+  --color-quinary: #A2C4F5;
+  */
+}
+
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.about-title {
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 10vh;
+    height: 30px;
+
+}
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 100px;
+    width: 60%;
+}
+
+.profiles {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-lyna {
+    display: flex;
+    flex-direction: row;
+}
+
+.description-lyna {
+    margin: 0;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 5%;
+}
+.description-lyna h2{
+    text-transform: uppercase;
+    font-family: "Poppins", sans-serif;
+    color: #fff;
+    font-size: 3em;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    
+}
+
+.description-lyna h2:nth-child(1) {
+    color: transparent;
+    -webkit-text-stroke: 2px #00aeff;
+}
+  
+.description-lyna h2:nth-child(2) {
+    color: #0088ff;
+    animation: animate 4s ease-in-out infinite;
+}
+
+.description-lyna h3 {
+
+}
+
+.profile-lyna img {
+    float: left;
+    width: 40%;
+    height: auto;
+    
+}
+.profile-austen {
+    display: flex;
+    flex-direction: row;
+}
+.description-austen {
+    margin: 0;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 5%;
+}
+.description-austen h2{
+    text-shadow: 3px 3px 0 var(--color-secondary), 6px 6px 0 var(--color-tertiary),
+    9px 9px var(--color-quaternary), 12px 12px 0 var(--color-quinary);
+    font-family: bungee, sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: calc(1rem + 1vw);
+    text-align: center;
+    margin: 0;
+    color: var(--color-primary);
+    animation: shadows 10s ease-in infinite, move 10s ease-in infinite;
+    letter-spacing: 0.4rem;
+    
+}
+
+.description-austen h3 {
+
+}
+
+.profile-austen img {
+    width: 40%;
+    height: auto;
+    float: left;
+    /* margin-left: 640px; */
+}
+
+.profile-james {
+    display: flex;
+    flex-direction: row;
+}
+
+.profile-james img {
+    width: 40%;
+    height: auto;
+    float: left;
+}
+
+.description-james {
+    font-size: 40px;
+    margin-top: 5%;
+    margin-right: auto;
+    margin-left: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: center;
+
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    -webkit-transform: translate3d(0,0,0);
+
+    display:inline-block;
+}
+.james {
+    animation: showup 7s infinite;
+}
+
+.cheng {
+    text-align: center;
+    width:0px;
+    animation: reveal 7s infinite;
+}
+
+.cheng span {
+    margin-left:-355px;
+    animation: slidein 7s infinite;
+}
+
+.profile-wes {
+    display: flex;
+    flex-direction: row;
+}
+
+.profile-wes img {
+    width: 40%;
+    height: auto;
+    float: left;
+}
+
+.name-wes {
+    overflow: hidden;
+    border-right: .15em solid orange;
+    font-size: 1.6em;
+    width: 0;
+    animation: 
+        typing 1s steps(20, end) forwards infinite;
+    margin-top: 5%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.description-wes {
+    display: inline-block;
+}
+
+/* Lyna's animation */
+@keyframes animate {
+    0%,
+    100% {
+      clip-path: polygon(
+        0% 45%,
+        16% 44%,
+        33% 50%,
+        54% 60%,
+        70% 61%,
+        84% 59%,
+        100% 52%,
+        100% 100%,
+        0% 100%
+      );
+    }
+  
+    50% {
+      clip-path: polygon(
+        0% 60%,
+        15% 65%,
+        34% 66%,
+        51% 62%,
+        67% 50%,
+        84% 45%,
+        100% 46%,
+        100% 100%,
+        0% 100%
+      );
+    }
+  }
+
+
+/* Austen's animation
+*/
+@keyframes shadows {
+0% {
+    text-shadow: none;
+}
+10% {
+    text-shadow: 3px 3px 0 var(--color-secondary);
+}
+20% {
+    text-shadow: 3px 3px 0 var(--color-secondary),
+    6px 6px 0 var(--color-tertiary);
+}
+30% {
+    text-shadow: 3px 3px 0 var(--color-secondary),
+    6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary);
+}
+40% {
+    text-shadow: 3px 3px 0 var(--color-secondary),
+    6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+    12px 12px 0 var(--color-quinary);
+}
+50% {
+    text-shadow: 3px 3px 0 var(--color-secondary),
+    6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+    12px 12px 0 var(--color-quinary);
+}
+60% {
+    text-shadow: 3px 3px 0 var(--color-secondary),
+    6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+    12px 12px 0 var(--color-quinary);
+}
+70% {
+    text-shadow: 3px 3px 0 var(--color-secondary),
+    6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary);
+}
+80% {
+    text-shadow: 3px 3px 0 var(--color-secondary),
+    6px 6px 0 var(--color-tertiary);
+}
+90% {
+    text-shadow: 3px 3px 0 var(--color-secondary);
+}
+100% {
+    text-shadow: none;
+}
+}
+
+@keyframes move {
+0% {
+    transform: translate(0px, 0px);
+}
+40% {
+    transform: translate(-12px, -12px);
+}
+50% {
+    transform: translate(-12px, -12px);
+}
+60% {
+    transform: translate(-12px, -12px);
+}
+100% {
+    transform: translate(0px, 0px);
+}
+}
+
+/*James' animation*/
+@keyframes showup {
+    0% {opacity:0;}
+    20% {opacity:1;}
+    80% {opacity:1;}
+    100% {opacity:0;}
+}
+
+@keyframes slidein {
+    0% { margin-left:-800px; }
+    20% { margin-left:-800px; }
+    35% { margin-left:0px; }
+    100% { margin-left:0px; }
+}
+
+@keyframes reveal {
+    0% {opacity:0;width:0px;}
+    20% {opacity:1;width:0px;}
+    30% {width:355px;}
+    80% {opacity:1;}
+    100% {opacity:0;width:355px;}
+}
+
+/* wes' animation */
+@keyframes typing {
+    from {width:0}
+    to {width: 100%}
+}

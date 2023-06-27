@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <meta charset="UTF-8">
+        <meta name = "viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+        <title>Document</title>
+        <link rel="stylesheet" href="./style.css"/>
+        <link rel="stylesheet" href="../index.css"/>
+        <meta name="author" content="OHPT">
+        <meta name="description" content="Website to see OHPT">
+        <meta name="keyboards" content="HTML, CSS, JavaScript">
+    </head>
+
+    <header>
+        <nav class="nav-bar">
+            <div class="logo-name"><a href="../index.html">No Weenies Allowed</a></div>
+            <ul class="nav-links">
+                <li><a href="../chat/chat.html">Chat</a></li>
+                <li><a href="../about/about.html">About Us</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Login</a></li>
+            </div>
+        </nav>
+    </header>
+
+    <body>
+        <div class="chat-window">
+            <div class="chat-header">
+                Personal Office Hour Assistant
+            </div>
+            <div class="chat-message assistant-message">
+                Welcome to OHPT! How can I assist you today?
+            </div>
+            <div class="chat-body" id="chat-body">
+                <div class="output-message" id="output-message">
+                </div>
+            </div>
+                <div class="chat-input">
+                    <input type="text" id="message-input" placeholder="Type your message..." />
+                    <button id="send-button">Send</button>
+                </div>
+        </div>
+    </body> 
+
+    
+
+    <script src="chat_functions.js"></script>
+
+
+    
+    
+</html>
