@@ -1,13 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+:root {
+  --black: #000000;
+  --white: #fff;
+  --background: var(--white);
+  --foreground: var(--black);
+  --primary: #000000;
+  /* --primary: #363e47; */
+  --secondary: #fff;
+  /* --secondary: #dadada; */
+  --accent-dark: #f4faa6;
+  --primary-dark: #D3D3D3;
+  --secondary-dark: #121212;
+  --accent-dark: #00FFFF;
+  --transition: 0.5s ease;
+}
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: "Poppins";
+  background: var(--secondary);
+}
+* {
+  /* color: #000000; */
+  margin: 0;
+  /* z-index: 1; */
+  /* position: relative; */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+html {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--white);
+  color: var(--foreground);
+  transition: color var(--transition);
+}
+
+html::before {
+  content: "";
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: var(--black);
+  transform: translateX(-100%);
+  transition: transform var(--transition);
+  z-index: 0;
+}
+
+.darkmode::before {
+  transform: translateX(0);
+}
+
+p {
+  margin: 20px 0;
+}
+button {
+  border: 0;
+  padding: 8px;
+  border-radius: 4px;
+  color: #363e47;
+  background: var(--primary);
+  cursor: pointer;
+}
+
+/* navbar */
+header nav {
+  display: flex;
+  padding: 20px;
+  gap: 50px;
+  justify-content: flex-end;
+  margin: 0 auto;
+}
+
+header nav {
+  display: flex;
+  padding: 20px;
+  gap: 50px;
+  align-items: center; /* Align items vertically */
+  justify-content: space-between; /* Distribute items horizontally */
+  margin: 0 auto;
+}
+
+header nav h1 {
+  margin-right: auto;
+  border-bottom: 3px solid var(--primary);
+}
+header nav a{
+  text-decoration: none;
+  padding: 1px;
+  border-radius: 4px;
+}
+header nav a:hover {
+  background: var(--primary)
+}
+/* 
+.nav-links {
+  display: flex;
+  gap: 20px;
+} */
+
+/* page content */
+main {
+  /* max-width: None; */
+  margin: 40px auto;
+}
+
+/* help layout */
+.help-layout nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 30px 0;
+}
+.help-layout nav a{
+  padding: 10px;
+  border: 2px solid white;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.help-layout nav a:hover{
+  border-color: var(--primary);
+}
+.help-layout nav a.active {
+  background: var(--primary);
+}
+
+/* FAQ content */
+.faq .question {
+  background: rgba(0,0,0,0.2);
+  padding: 5px 20px;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+/* contact form */
+form {
+  margin-top: 30px;
+}
+form input, form label span, form textarea {
+  display: block;
+}
+form input, form textarea {
+  margin-bottom: 30px;
+  padding: 8px;
+  border-radius: 4px;
+  border: 0;
+  width: 300px;
+  color: var(--secondary);
+}
+form label span {
+  margin-bottom: 10px;
+}
+
+/* chat */
+
+
+/* chat sidebar */
+
+
+/* toggle */
+.hidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.toggle-wrapper {
+  width: 130px;
+  display: flex;
+  /* margin: 0; Centering for demo */
+}
+
+.toggle {
+  height: 40px;
+  width: 105px;
+  transform: scale(0.4);
+  background: var(--foreground);
+  border-radius: 40px;
+  padding: 12px;
+  display: block;
+  justify-content: flex-end;
+  margin: 0 auto;
+  margin-left: -50px; /* added this in because heck I don't know how to remove the padding */
+  transition: background var(--transition);
+  cursor: pointer;
+}
+.toggle::before {
+  content: "";
+  display: block;
+  height: 41px;
+  width: 41px;
+  border-radius: 30px;
+  background: var(--background);
+  position: absolute;
+  z-index: 2;
+  transform: translate(0);
+  transition: transform var(--transition), background var(--transition);
+}
+
+.toggle.enabled::before {
+  transform: translateX(65px);
+}
+
+.toggle input {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+}
+
+.toggle .icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  margin: 0 5px;
+}
+
+.toggle .icons svg {
+  fill: var(--background);
+  height: 24px; /* Adjust based on your design */
+  width: 24px;  /* Adjust based on your design */
+  padding: 4px; /* Add padding around the icons */
+  z-index: 0;
 }
