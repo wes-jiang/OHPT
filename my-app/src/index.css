@@ -2,29 +2,31 @@
 
 :root {
   --black: #000000;
-  --white: #fff;
+  --white: #fffff8;
   --background: var(--white);
   --foreground: var(--black);
   --primary: #000000;
-  /* --primary: #363e47; */
+  --primary: #363e47;
   --secondary: #fff;
-  /* --secondary: #dadada; */
-  --accent-dark: #f4faa6;
+  --secondary: #dadada;
+  --accent-light: #f4faa6;
   --primary-dark: #D3D3D3;
   --secondary-dark: #121212;
   --accent-dark: #00FFFF;
   --transition: 0.5s ease;
+  --transition-navbar: 0.8s ease;
 }
+
 body {
   margin: 0;
   font-family: "Poppins";
-  background: var(--secondary);
+  /* background: var(--secondary); */
 }
 * {
   /* color: #000000; */
   margin: 0;
-  /* z-index: 1; */
-  /* position: relative; */
+  z-index: 1;
+  position: relative;
 }
 
 html {
@@ -56,8 +58,8 @@ button {
   border: 0;
   padding: 8px;
   border-radius: 4px;
-  color: #363e47;
-  background: var(--primary);
+  color: #a2a8ae;
+  background: var(--foreground);
   cursor: pointer;
 }
 
@@ -84,12 +86,15 @@ header nav h1 {
   border-bottom: 3px solid var(--primary);
 }
 header nav a{
+  background-color: var(--transition-navbar);
+  color: var(--transition-navbar);
   text-decoration: none;
   padding: 1px;
   border-radius: 4px;
 }
 header nav a:hover {
-  background: var(--primary)
+  background: var(--foreground);
+  color: var(--background);
 }
 /* 
 .nav-links {
@@ -170,7 +175,7 @@ form label span {
 .toggle-wrapper {
   width: 130px;
   display: flex;
-  /* margin: 0; Centering for demo */
+  margin: 0; /*Centering for demo */
 }
 
 .toggle {
@@ -183,7 +188,8 @@ form label span {
   display: block;
   justify-content: flex-end;
   margin: 0 auto;
-  margin-left: -50px; /* added this in because heck I don't know how to remove the padding */
+  position: relative;
+  /* margin-left: -50px; added this in because heck I don't know how to remove the padding */
   transition: background var(--transition);
   cursor: pointer;
 }

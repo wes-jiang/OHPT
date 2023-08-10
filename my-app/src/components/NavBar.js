@@ -1,4 +1,6 @@
 import { Outlet, NavLink } from "react-router-dom"
+import React from "react"
+
 import { Button } from "@chakra-ui/react"
 
 import ThemeToggle from "./ThemeToggle"
