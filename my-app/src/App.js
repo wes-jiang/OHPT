@@ -3,7 +3,7 @@ import SendBtn from './components/SendBtn'
 import './App.css';
 import NavBar from './components/NavBar'
 import React, {useState} from 'react'
-import { Grid, GridItem } from '@chakra-ui/react'
+
 
 
 // layouts
@@ -30,6 +30,7 @@ import {
   RouterProvider 
 } from 'react-router-dom';
 import { chakra } from '@chakra-ui/react';
+import MyAvatar from './components/chat/MyAvatar';
 
 const router = createBrowserRouter(
   createRoutesFromElements(

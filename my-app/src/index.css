@@ -13,7 +13,8 @@
   --primary-dark: #D3D3D3;
   --secondary-dark: #121212;
   --accent-dark: #00FFFF;
-  --transition: 0.5s ease;
+  --transition-ball: 0.5s ease;
+  --transition-toggle-back: 0.8s ease;
   --transition-navbar: 0.8s ease;
 }
 
@@ -25,11 +26,11 @@ body {
 * {
   /* color: #000000; */
   margin: 0;
-  z-index: 1;
+  /* z-index: 1; */
   position: relative;
 }
 
-html {
+/* html {
   font-family: Arial, Helvetica, sans-serif;
   background: var(--white);
   color: var(--foreground);
@@ -45,7 +46,7 @@ html::before {
   transform: translateX(-100%);
   transition: transform var(--transition);
   z-index: 0;
-}
+} */
 
 .darkmode::before {
   transform: translateX(0);
@@ -53,14 +54,6 @@ html::before {
 
 p {
   margin: 20px 0;
-}
-button {
-  border: 0;
-  padding: 8px;
-  border-radius: 4px;
-  color: #a2a8ae;
-  background: var(--foreground);
-  cursor: pointer;
 }
 
 /* navbar */
@@ -87,20 +80,15 @@ header nav h1 {
 }
 header nav a{
   background-color: var(--transition-navbar);
-  color: var(--transition-navbar);
+  color: var(--link-color);
   text-decoration: none;
   padding: 1px;
   border-radius: 4px;
 }
 header nav a:hover {
-  background: var(--foreground);
-  color: var(--background);
+  background-color: var(--hover-back-color);
+  color: var(--hover-color);
 }
-/* 
-.nav-links {
-  display: flex;
-  gap: 20px;
-} */
 
 /* page content */
 main {
@@ -179,10 +167,10 @@ form label span {
 }
 
 .toggle {
-  height: 40px;
-  width: 105px;
-  transform: scale(0.4);
-  background: var(--foreground);
+  height: 65px;
+  width: 130px;
+  transform: scale(0.45);
+  background: var(--toggle-back-color);
   border-radius: 40px;
   padding: 12px;
   display: block;
@@ -190,7 +178,7 @@ form label span {
   margin: 0 auto;
   position: relative;
   /* margin-left: -50px; added this in because heck I don't know how to remove the padding */
-  transition: background var(--transition);
+  transition: background var(--transition-ball);
   cursor: pointer;
 }
 .toggle::before {
@@ -199,11 +187,11 @@ form label span {
   height: 41px;
   width: 41px;
   border-radius: 30px;
-  background: var(--background);
+  background: var(--toggle-ball-color);
   position: absolute;
   z-index: 2;
   transform: translate(0);
-  transition: transform var(--transition), background var(--transition);
+  transition: transform var(--transition-ball), background var(--transition-toggle-back);
 }
 
 .toggle.enabled::before {
@@ -225,7 +213,7 @@ form label span {
 }
 
 .toggle .icons svg {
-  fill: var(--background);
+  fill: var(--toggle-icon-color);
   height: 24px; /* Adjust based on your design */
   width: 24px;  /* Adjust based on your design */
   padding: 4px; /* Add padding around the icons */

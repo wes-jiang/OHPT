@@ -21,8 +21,7 @@ const CustomInput = forwardRef((props, ref) => {
     );
   });
 
-  const ChatInput = () => {
-    const [inputMessage, setInputMessage, handleSendMessage] = useState('')
+  const ChatInput = ({ inputMessage, setInputMessage, handleSendMessage }) => {
     return (
       <Flex w="100%" mt="5">
 
