@@ -30,11 +30,9 @@ body {
   position: relative;
 }
 
-/* html {
+html {
   font-family: Arial, Helvetica, sans-serif;
-  background: var(--white);
-  color: var(--foreground);
-  transition: color var(--transition);
+  height: 100%
 }
 
 html::before {
@@ -57,13 +55,13 @@ p {
 }
 
 /* navbar */
-header nav {
+/* header nav {
   display: flex;
   padding: 20px;
   gap: 50px;
   justify-content: flex-end;
   margin: 0 auto;
-}
+} */
 
 header nav {
   display: flex;

@@ -1,7 +1,10 @@
-import { Outlet, NavLink } from "react-router-dom"
+import { Outlet, NavLink, useLocation } from "react-router-dom"
 import React from "react"
 
-import { Button, useColorModeValue, useColorMode } from "@chakra-ui/react"
+import { Button, 
+  Collapse,
+  useColorModeValue, 
+  useColorMode } from "@chakra-ui/react"
 
 import ThemeToggle from "./ThemeToggle"
 
@@ -19,6 +22,9 @@ export default function NavBar() {
   document.documentElement.style.setProperty("--hover-back-color", hoverBackColor);
   document.documentElement.style.setProperty("--active-color", activeColor);
 
+  const location = useLocation()
+  const visiblePaths = ['/', '/about', '/help', '/team']
+  const checkNavPath = visiblePaths.includes(location.pathname)
   return (
     <div className="navbar">
       <header>

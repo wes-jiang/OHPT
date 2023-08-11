@@ -11,10 +11,10 @@ const xl = defineStyle({
     w: '60',
     borderRadius: 'md'
   })
-  
-  const buttonTheme = defineStyleConfig({
-    sizes: {xl},
-  })
+
+const buttonTheme = defineStyleConfig({
+sizes: {xl},
+})
 
   
 const theme = {
@@ -38,6 +38,15 @@ const theme = {
       },
     },
   },
+
+  colors: {
+    transparent: 'transparent',
+    black: '#000',
+    white: '#fff',
+    // gray: 
+
+  },
+
 };
 
 export default extendTheme({theme, buttonTheme});
