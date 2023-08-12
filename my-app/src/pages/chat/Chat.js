@@ -85,7 +85,7 @@ const Chat = () => {
       {/* Chatbox */}
       <GridItem colspan={3}>
         <Messages messages={messages}/>
-        <Flex w="100%" mt="5">
+        <Flex w="100%" mt="5" >
           <CustomInput 
           onKeyDown={(e) => {
             if (e.key === "Enter") {
