@@ -4,13 +4,13 @@ from .models import User, Conversation, Message
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'course', 'sections', 'name', 'description', 'showPopup')
+        fields = ('id', 'name', 'email', 'password')
         # extra_kwargs = {'sections': {'required': False}}
 
 class ConversationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conversation
-        fields = ('id', 'user', 'course')
+        fields = ('id', 'user', 'course', 'time_started')
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:

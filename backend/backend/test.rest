@@ -1,0 +1,20 @@
+
+POST http://127.0.0.1:8000/chat/conversation/1
+Content-Type: application/json 
+
+{"sender": "user", "content": "test message", "conversation": 1}
+
+###
+
+GET http://127.0.0.1:8000/chat/conversation/1
+Content-Type: application/json 
+
+{}
+
+###
+
+GET http://127.0.0.1:8000/chat/course/1
+Content-Type: application/json 
+
+{}
+
