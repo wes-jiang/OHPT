@@ -8,6 +8,71 @@ from rest_framework.response import Response
 from .models import User, Conversation, Message, Course
 from .serializers import MessageSerializer, ConversationSerializer, UserSerializer
 
+# do i need to import User from django.contrib.auth.models?
+
+from rest_framework.authtoken.models import Token
+from django.shortcuts import get_object_or_404
+
+from django.http import HttpResponse
+
+# authentication
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+def test(request):
+    print("worked")
+    return HttpResponse('<h1>test</h1>')
+
+@api_view(['GET'])
+def signup(request):
+    serializer = UserSerializer(request.data)
+    
+    # validate
+    if serializer.is_valid():
+        # save the user to DB
+        serializer.save()
+
+        # retrieve the user as an object, then give that user a token
+        user = User.objects.get(email=request.data.email)
+        token = Token.objects.create(user=user)
+
+        # ??? how does this use the hashed password?
+        user.set_password(request.data.password)
+        user.save()
+
+        # return response containing token and the user data
+        return Response({"token": token.key, "user": serializer.data})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# TODO: understand what these are doing from tutorial
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def test_token(request):
+    # why is this all that I need to do?
+    return Response("passed for {}".format(request.user.email))
+
+
+@api_view(['GET'])
+def login(request):
+    user = get_object_or_404(User, email=request.data.email)
+
+    # validate password
+    if not user.check_password(request.data.password):
+        # case where validation fails
+        return Response({"detail": "not found."}, status=status.HTTP_404_NOT_FOUND)
+    
+    # retrieve token for this user
+    token, created = Token.objects.get_or_create(user=user)
+
+    # get the serialized user instance to return in response
+    serializer = UserSerializer(instance=user)
+    
+    return Response({"token": token.key, "user": serializer.data})
+        
+
 # /conversation/<int:pk>
 @api_view(['GET', 'POST', 'PUT'])
 def conversation_details(request, pk):
