@@ -84,45 +84,52 @@ const Chat = () => {
 
       {/* Chatbox */}
       <GridItem colspan={3}>
-        <Messages messages={messages}/>
-        <Flex w="100%" mt="5" >
-          <CustomInput 
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSendMessage();
-              e.preventDefault();
-              setInputMessage('');
-            }
-          }}
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          color= {TextColor}
-          />
-            <Button
-              bg="black"
-              color="white"
-              variant="outline"
-              borderRadius="none"
-              // _hover={{
-              //   bg: "white",
-              //   color: "black",
-              //   border: "1px solid black",
-              // }}
-              disabled={inputMessage.trim().length <= 0}
-              onClick={handleSendMessage}
-            >
-              Send
-            </Button>
+        <div className="chatbox-container">
+          <div className="messages-container">
+            <Messages messages={messages}/>
+          </div>
 
-            <Button isloading
-                loadingText='Regenerating'
-                colorScheme='teal'
-                spinner={<BeatLoader size={8} color='white' />}
-                variant='outline'>
-                    Regenerate
-                </Button>
+          <div className="input-buttons-container">
+            <Flex w="100%" mt="5" >
+              <CustomInput 
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSendMessage();
+                  e.preventDefault();
+                  // setInputMessage('');
+                }
+              }}
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              color= {TextColor}
+              />
+              <Button
+                bg="black"
+                color="white"
+                variant="outline"
+                borderRadius="none"
+                // _hover={{
+                //   bg: "white",
+                //   color: "black",
+                //   border: "1px solid black",
+                // }}
+                disabled={inputMessage.trim().length <= 0}
+                onClick={handleSendMessage}
+              >
+                Send
+              </Button>
 
-          </Flex>
+              <Button isLoading
+                  isLoadingText='Regenerating'
+                  colorScheme='teal'
+                  spinner={<BeatLoader size={8} color='white' />}
+                  variant='outline'>
+                      Regenerate
+                  </Button>
+
+            </Flex>
+          </div>
+        </div>
       </GridItem>
     </Grid>
           

@@ -29,8 +29,8 @@ import {
   Route, 
   RouterProvider 
 } from 'react-router-dom';
-import { chakra } from '@chakra-ui/react';
-import MyAvatar from './components/chat/MyAvatar';
+
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(

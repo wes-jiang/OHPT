@@ -12,8 +12,6 @@ import BeatLoader from "react-spinners/BeatLoader"
 const Messages = ({ messages }) => {
 
 
-
-
   //Colors for the User
   const MsgUserBackColor = useColorModeValue("white", "dark-gray")
   const MsgUserTextColor = useColorModeValue("black", "white")
@@ -55,7 +53,6 @@ const Messages = ({ messages }) => {
                     maxWidth="60%"
                     borderRadius={"10px"}
                     position="relative"
-                    ref={elementRef}
                 >
                 <Text 
                     flex="1"
@@ -69,7 +66,7 @@ const Messages = ({ messages }) => {
                 </Text>
 
                 {!isMyMessage && (
-                    <Button leftIcon={StarIcon} />
+                    <Button leftIcon={<StarIcon />} />
                 )}
                 {isMyMessage && (
                 <Avatar 
