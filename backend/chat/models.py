@@ -30,7 +30,9 @@ class Message(models.Model):
     sender = models.CharField(max_length=50)
     content = models.TextField()
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+    starred = models.BooleanField(default=False)
     time_sent = models.DateTimeField(default=timezone.now)
+    
 
 
 
