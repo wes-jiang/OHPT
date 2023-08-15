@@ -6,6 +6,7 @@ import { Button,
   useColorModeValue, 
   useColorMode } from "@chakra-ui/react"
 
+
 import ThemeToggle from "./ThemeToggle"
 
 export default function NavBar() {
@@ -23,7 +24,7 @@ export default function NavBar() {
   document.documentElement.style.setProperty("--active-color", activeColor);
 
   const location = useLocation()
-  const visiblePaths = ['/', '/about', '/help', '/team']
+  const visiblePaths = ['/', '/about', '/help', '/team', '/chat', '/login']
   const checkNavPath = visiblePaths.includes(location.pathname)
   return (
     <div className="navbar">
@@ -37,7 +38,9 @@ export default function NavBar() {
           <NavLink to="team">Team</NavLink>
           <NavLink to="chat">Chat</NavLink>
           <ThemeToggle />
-          <Button colorScheme="blue">Login</Button>
+          <NavLink to='login'>
+            <Button> Login </Button>
+          </NavLink>
         </nav>
       </header>
       <main>

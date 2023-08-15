@@ -1,18 +1,41 @@
+import {
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  Text,
+  Input,
+  Stack,
+} from '@chakra-ui/react'
+
+
 export default function Contact() {
   return (
     <div className="contact">
-      <h3>Contact Us</h3>
-      <form>
-        <label>
-          <span>Your email:</span>
-          <input type="email" name="email" required />
-        </label>
-        <label>
-          <span>Your message:</span>
-          <textarea name="message" required></textarea>
-        </label>
-        <button>Submit</button>
-      </form>
+      <Flex
+        align={'center'}
+        justify={'center'}
+      >
+        <Stack>
+        </Stack>
+
+        <Stack spacing={4}>
+          <FormControl id='email'>
+            <FormLabel>Email Address</FormLabel>
+            <Input type='email' />
+          </FormControl>
+
+          <FormControl id='message'>
+            <FormLabel>Message</FormLabel>
+            <Input type='textArea' />
+          </FormControl>
+
+          <Button>
+            Submit
+          </Button>
+        </Stack>
+
+      </Flex>  
     </div>
   )
 }

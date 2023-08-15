@@ -8,6 +8,9 @@ import {
   useColorModeValue,
   } from '@chakra-ui/react'
 
+
+import { Link, useLoaderData } from "react-router-dom"
+
 import {FaStop} from 'react-icons/fa'
 
 import {RepeatIcon} from "@chakra-ui/icons"
@@ -70,9 +73,7 @@ const Chat = () => {
   }, 1000)
   }
 
-  
-
-
+  const chats = useLoaderData()
 
   const SidebarColor = useColorModeValue("gray", "black")
   const TextColor = useColorModeValue('black', 'white')
@@ -198,3 +199,10 @@ const Chat = () => {
   }
 
   export default Chat
+
+
+  export const chatLoader = async () => {
+    const res = await fetch('http://localhost:8000/chat')
+
+    return res.json()
+  }
