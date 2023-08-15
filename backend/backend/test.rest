@@ -25,5 +25,17 @@ Content-Type: application/json
 
 {}
 
+###
 
+GET http://127.0.0.1:8000/chat/conversation/1
+Content-Type: application/json 
+
+{}
+
+###
+
+POST http://127.0.0.1:8000/chat/course/1
+Content-Type: application/json 
+
+{"title": "New Conversation", "user": 1, "course": 1}
 

@@ -127,9 +127,18 @@ def conversation_details(request, pk):
         return Response(status=status.HTTP_200_OK)
         
 
-
-# @api_view(['GET', 'POST'])
-# def conversation_list(request):
+# '/conversation'
+@api_view(['POST'])
+def conversation_list(request):
+    """
+    create a new conversation
+    request: {
+        user: int (user id)
+        course: int (course id)
+        title: string
+    }
+    """
+    data = request.data
 
 # '/course/<int:pk>'
 @csrf_exempt
@@ -160,7 +169,8 @@ def course_conversations(request, pk):
     elif request.method == 'POST':
         # add time
         data = request.data
-        data["time_started"] = timezone.now
+        data["time_started"] = timezone.now()
+        print(data["time_started"])
 
         serializer = ConversationSerializer(data=data)
         if serializer.is_valid():
