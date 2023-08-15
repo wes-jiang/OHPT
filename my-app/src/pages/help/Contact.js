@@ -6,6 +6,7 @@ import {
   Text,
   Input,
   Stack,
+  Textarea,
 } from '@chakra-ui/react'
 
 
@@ -27,7 +28,12 @@ export default function Contact() {
 
           <FormControl id='message'>
             <FormLabel>Message</FormLabel>
-            <Input type='textArea' />
+            <Textarea
+              name='message'
+              placeholder='Your Message'
+              rows={6}
+              resize='none'
+            />
           </FormControl>
 
           <Button>

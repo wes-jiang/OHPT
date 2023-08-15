@@ -26,6 +26,7 @@ import {
 import Login from './pages/login/login';
 import Signup from './pages/login/signup';
 import ForgotPass from './pages/login/forgotPass';
+import UserProfileEdit from './pages/login/userProfileEdit';
 
 
 
@@ -39,10 +40,11 @@ const router = createBrowserRouter(
           <Route path="faq" element={<FAQ />} />
           <Route path="contact" element={<Contact />} />
         </Route>
-        <Route path="chat" element={<Chat />} loader={chatLoader} />
+        <Route path="chat" element={<Chat />} />
         <Route path='login' element={<Login />} />
         <Route path='signup' element={<Signup />} />
         <Route path="forgotpass" element={<ForgotPass />} />
+        <Route path="userProfileEdit" element={<UserProfileEdit />} />
         <Route path="*" element={<NotFound />} />
       </Route>
   )

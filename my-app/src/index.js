@@ -7,7 +7,6 @@ import theme from "./theme";
 
 import { ChakraProvider, 
   ColorModeScript,
-  extendTheme,
  } from '@chakra-ui/react';
 
 

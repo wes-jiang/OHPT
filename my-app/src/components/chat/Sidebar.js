@@ -18,6 +18,7 @@ import {AiFillLock} from 'react-icons/ai'
 import { NavLink } from "react-router-dom"
 
 
+
 const Sidebar = () => {
   const { colorMode } = useColorMode();
 
@@ -100,6 +101,13 @@ const Sidebar = () => {
         </MenuList>
       </Menu>
       
+      <NavLink to={"/userProfileEdit"}>
+        <Button>
+          Settings
+        </Button>
+      </NavLink>
+      
+
       <Text> Topic 1 </Text>
       <Text> Topic 2 </Text>
 
