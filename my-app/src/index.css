@@ -44,7 +44,7 @@ html::before {
   transform: translateX(-100%);
   transition: transform var(--transition);
   z-index: 0;
-} */
+} 
 
 .darkmode::before {
   transform: translateX(0);
@@ -142,25 +142,7 @@ form label span {
 }
 
 /* chat */
-.chatbox-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
 
-.messages-container {
-  flex-grow: 1;
-  overflow-y: scroll;
-  padding: 20px; /* Add padding for spacing */
-}
-
-.input-box-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px; /* Add spacing between input and buttons */
-  background-color: white; /* Adjust background color as needed */
-}
 
 
 /* chat sidebar */

@@ -183,11 +183,12 @@ body {
 
 .name-wes {
     overflow: hidden;
-    border-right: .15em solid orange;
+    border-right: .15em solid palevioletred;
     font-size: 1.6em;
     width: 0;
     animation: 
-        typing 1s steps(20, end) forwards infinite;
+        typing 1s steps(20, end) forwards,
+        blink .8s infinite;
     margin-top: 5%;
     margin-right: auto;
     margin-left: auto;

@@ -8,11 +8,15 @@ import {
   useColorModeValue,
   } from '@chakra-ui/react'
 
+import {FaStop} from 'react-icons/fa'
+
+import {RepeatIcon} from "@chakra-ui/icons"
+
 import ResizeTextarea from "react-textarea-autosize"
-import { AddIcon } from '@chakra-ui/icons';
 import React, { forwardRef, useState } from "react";
 import BeatLoader from "react-spinners/BeatLoader"
 import Messages from '../../components/chat/Messages'
+import Sidebar from '../../components/chat/Sidebar';
 
 
 const CustomInput = forwardRef((props, ref) => {
@@ -36,67 +40,125 @@ const CustomInput = forwardRef((props, ref) => {
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [isRegenerating, setIsRegenerating] = useState(false)
+
   const handleSendMessage = () => {
     if (!inputMessage.trim().length) {
       return;
     }
     const data = inputMessage
 
+    setIsLoading(true)
+    setIsRegenerating(true)
+
     setMessages((old) => [...old, { from: "me", text: data }]);
     setInputMessage("");
 
     setTimeout(() => {
       setMessages((old) => [...old, { from: "OHPT", text: data }]);
+      setIsLoading(false)
+      setIsRegenerating(false)
     }, 1000);
   }
+
+  const handleRegenerate = () => {
+    setIsRegenerating(true)
+
+    setTimeout(() => {
+      setIsRegenerating(false)
+  }, 1000)
+  }
+
+  
+
+
 
   const SidebarColor = useColorModeValue("gray", "black")
   const TextColor = useColorModeValue('black', 'white')
 
   return (
-    <Grid templateColumns="1fr 7fr" gap={1}
-    style={{height: '100vh'}}>
+    <Grid
+      templateColumns="1fr 7fr" 
+      gap={1}
+      style={{height: '100vh', maxHeight:'100vh'}}
+    >
       {/* Sidebar */}
       <GridItem 
           as="aside"
           colSpan={1}
           style={{ backgroundColor: SidebarColor,
-            overflowY: 'auto',
+          // overflowY: 'auto',
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          // position: 'fixed',
         }}
           p="30px">
 
         {/* Sidebar content */}
-        <Button
-          leftIcon={<AddIcon />}
-          colorScheme='white'
-          size="md"
-          padding="3"
-          variant='outline'
-          >
-            Create
+        <Sidebar />
 
-        </Button>
-        <Text> Topic 1 </Text>
-        <Text> Topic 2 </Text>
       </GridItem>
 
       {/* Chatbox */}
-      <GridItem colspan={3}>
-        <div className="chatbox-container">
-          <div className="messages-container">
+      <GridItem>
+        <Flex 
+          className="chatbox-container"
+          flexDirection={"column"}
+          height="100%"
+          // overflowY={"scroll"}
+        >
+          <Flex 
+            className="messages-container"
+            style = {{
+              flexGrow:1,
+              // overflowY:"scroll",
+              maxHeight:"100%",
+              padding:"10px",
+              overflowY: 'auto',
+            }}
+            >
             <Messages messages={messages}/>
-          </div>
+          </Flex>
 
-          <div className="input-buttons-container">
-            <Flex w="100%" mt="5" >
+          <Flex 
+            className="input-buttons-container"
+            alignItems="center"
+            justifyContent="space-between"
+            padding="10px" // Add your spacing here
+            width="100%"
+            zIndex="1"
+            style = {{position: 'sticky', bottom: '0'}}
+            >
+            <Flex w="100%" mt="5" flexDirection={"column"} >
+              <Flex
+                className='RegenerateButton'
+                ml='auto'
+                // justifyContent={'center'}
+                mb={2}
+                
+                >
+                <Button 
+                  // disabled={isRegenerating}
+                  // isLoadingText='Regenerating'
+                  colorScheme='teal'
+                  leftIcon={isRegenerating ? <FaStop /> : <RepeatIcon />}
+                  variant='outline'
+                  onClick={handleRegenerate}
+
+                >
+                  {isRegenerating ? 'Stop': 'Regenerate'}    
+                      
+                </Button>
+
+              </Flex>
+
+              <Flex>
               <CustomInput 
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === "Enter" && !isLoading) {
                   handleSendMessage();
                   e.preventDefault();
-                  // setInputMessage('');
                 }
               }}
               value={inputMessage}
@@ -113,23 +175,21 @@ const Chat = () => {
                 //   color: "black",
                 //   border: "1px solid black",
                 // }}
-                disabled={inputMessage.trim().length <= 0}
+                isLoading={isLoading}
+                disabled={inputMessage.trim().length <= 0 || isLoading}
                 onClick={handleSendMessage}
               >
                 Send
               </Button>
 
-              <Button isLoading
-                  isLoadingText='Regenerating'
-                  colorScheme='teal'
-                  spinner={<BeatLoader size={8} color='white' />}
-                  variant='outline'>
-                      Regenerate
-                  </Button>
+
+              </Flex>
+              
+              
 
             </Flex>
-          </div>
-        </div>
+          </Flex>
+        </Flex>
       </GridItem>
     </Grid>
           
