@@ -27,10 +27,10 @@ Content-Type: application/json
 
 ###
 
-GET http://127.0.0.1:8000/chat/conversation/1
+POST http://127.0.0.1:8000/chat/signup
 Content-Type: application/json 
 
-{}
+{"first_name": "Austen", "last_name": "Liao", "email": "austenliao@berkeley.edu", "password": "pass"}
 
 ###
 

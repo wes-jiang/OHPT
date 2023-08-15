@@ -8,8 +8,9 @@ import { Flex,
     } from "@chakra-ui/react"
 import { StarIcon } from "@chakra-ui/icons";
 import BeatLoader from "react-spinners/BeatLoader"
+import { useLoaderData } from "react-router-dom";
 
-const Messages = ({ messages }) => {
+const Messages = ({messages}) => {
     const chatContainerRef = useRef(null)
 
     /*
@@ -27,6 +28,10 @@ const Messages = ({ messages }) => {
   const MsgAssistBackColor = useColorModeValue("gray.100", "gray.800")
   const MsgAssistTextColor = useColorModeValue("black", "white")
 
+  const conversationId = 1
+  const loadMessages = useLoaderData(msgLoader, conversationId)
+
+  const AllMessages = [...loadMessages, ...messages]
   return (
     <Flex 
         w="100%" 
@@ -38,11 +43,11 @@ const Messages = ({ messages }) => {
         // justifyContent="center" 
         // alignItems="center"
         >
-      {messages.map((item, index) => {
-        const isMyMessage = item.from === "me"
+      {AllMessages.map(msg => {
+        const isMyMessage = msg.sender === "user"
           return (
             <Flex 
-                key={index} 
+                // key={index} 
                 w="100%" 
                 flexDirection={isMyMessage ? "row-reverse" : "row"}
                 // alignItems= "center"
@@ -81,7 +86,7 @@ const Messages = ({ messages }) => {
                         textAlign={isMyMessage ? 'right' : 'left'}
                         paddingRight={isMyMessage ? "4" : "4"}
                     >
-                        {item.text}
+                        {msg.content}
                     </Text>
 
                     {!isMyMessage && (
@@ -96,3 +101,11 @@ const Messages = ({ messages }) => {
 };
 
 export default Messages
+
+export const msgLoader = async (conversationId) => {
+    console.log('hi')
+    // const res = await fetch(`http://127.0.0.1:8000/chat/conversation/${conversationId}`)
+    const res = await fetch(`http://127.0.0.1:8000/chat/conversation/1`)
+    const hi = res.json()
+    return hi
+  }

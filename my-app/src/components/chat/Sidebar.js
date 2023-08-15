@@ -15,7 +15,7 @@ import { Grid,
 import { AddIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import {SiAwslambda} from 'react-icons/si'
 import {AiFillLock} from 'react-icons/ai'
-import { NavLink } from "react-router-dom"
+import { NavLink, useLoaderData, Link } from "react-router-dom"
 
 
 
@@ -40,6 +40,7 @@ const Sidebar = () => {
 
   const [menuItemText, setMenuItemText] = useState('Classes')
 
+  const convos = useLoaderData()
 
   // const [sidebarItems, setSidebarItems] = useState([])
   // const handleAddItem = (newItem) => {
@@ -106,10 +107,13 @@ const Sidebar = () => {
           Settings
         </Button>
       </NavLink>
-      
 
-      <Text> Topic 1 </Text>
-      <Text> Topic 2 </Text>
+      {convos.map(convo => (
+        <Link to="/" key={convo.id}>
+          <Text> {convo.title} </Text>
+        </Link>
+      ))}
+      
 
                 {/* <GridItem>
                   <Textarea 
@@ -130,3 +134,10 @@ const Sidebar = () => {
 }
 
 export default Sidebar;
+
+export const convoLoader = async () => {
+  console.log('hi')
+  const res = await fetch('http://127.0.0.1:8000/chat/course/1')
+  console.log("hi")
+  return res.json()
+}

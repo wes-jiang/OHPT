@@ -50,16 +50,36 @@ const Chat = () => {
     if (!inputMessage.trim().length) {
       return;
     }
-    const data = inputMessage
+
+    const dataMsg = inputMessage
+    const data = {
+      sender: "user", 
+      content: dataMsg, 
+      conversation: '1'
+    }
 
     setIsLoading(true)
     setIsRegenerating(true)
 
-    setMessages((old) => [...old, { from: "me", text: data }]);
-    setInputMessage("");
+    fetch(`http://127.0.0.1:8000/chat/conversation/1`, {
+      method: 'POST',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    }).then(() => {
+      console.log('data added')
+      setMessages((old) => [...old, {sender: "user", content: inputMessage, conversation: '1'}])
+      // console.log()
+      setInputMessage("")
+
+    }
+
+    )
+
+
+    
 
     setTimeout(() => {
-      setMessages((old) => [...old, { from: "OHPT", text: data }]);
+      setMessages((old) => [...old, { sender: "OHPT", content: "reply", conversation: '1' }]);
       setIsLoading(false)
       setIsRegenerating(false)
     }, 1000);
@@ -156,15 +176,15 @@ const Chat = () => {
 
               <Flex>
               <CustomInput 
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !isLoading) {
-                  handleSendMessage();
-                  e.preventDefault();
-                }
-              }}
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              color= {TextColor}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !isLoading) {
+                    handleSendMessage();
+                    e.preventDefault();
+                  }
+                }}
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                color= {TextColor}
               />
               <Button
                 bg="black"
@@ -201,8 +221,4 @@ const Chat = () => {
   export default Chat
 
 
-  export const chatLoader = async () => {
-    const res = await fetch('http://localhost:8000/chat')
 
-    return res.json()
-  }

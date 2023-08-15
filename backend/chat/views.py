@@ -25,9 +25,9 @@ def test(request):
     print("worked")
     return HttpResponse('<h1>test</h1>')
 
-@api_view(['GET'])
+@api_view(['POST'])
 def signup(request):
-    serializer = UserSerializer(request.data)
+    serializer = UserSerializer(data=request.data)
     
     # validate
     if serializer.is_valid():
@@ -35,7 +35,7 @@ def signup(request):
         serializer.save()
 
         # retrieve the user as an object, then give that user a token
-        user = User.objects.get(email=request.data.email)
+        user = User.objects.get(email=request.data["email"])
         token = Token.objects.create(user=user)
 
         # ??? how does this use the hashed password?
@@ -127,18 +127,9 @@ def conversation_details(request, pk):
         return Response(status=status.HTTP_200_OK)
         
 
-# '/conversation'
-@api_view(['POST'])
-def conversation_list(request):
-    """
-    create a new conversation
-    request: {
-        user: int (user id)
-        course: int (course id)
-        title: string
-    }
-    """
-    data = request.data
+
+# @api_view(['GET', 'POST'])
+# def conversation_list(request):
 
 # '/course/<int:pk>'
 @csrf_exempt
@@ -169,8 +160,7 @@ def course_conversations(request, pk):
     elif request.method == 'POST':
         # add time
         data = request.data
-        data["time_started"] = timezone.now()
-        print(data["time_started"])
+        data["time_started"] = timezone.now
 
         serializer = ConversationSerializer(data=data)
         if serializer.is_valid():

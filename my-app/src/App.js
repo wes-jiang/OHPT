@@ -13,8 +13,11 @@ import About from './pages/About'
 import Team from './pages/Team'
 import Contact from './pages/help/Contact'
 import FAQ from './pages/help/FAQ'
-import Chat, {chatLoader} from './pages/chat/Chat'
+import Chat from './pages/chat/Chat'
 import NotFound from './pages/NotFound'
+
+import { convoLoader } from './components/chat/Sidebar';
+import { msgLoader } from './components/chat/Messages';
 
 
 import { 
@@ -40,7 +43,8 @@ const router = createBrowserRouter(
           <Route path="faq" element={<FAQ />} />
           <Route path="contact" element={<Contact />} />
         </Route>
-        <Route path="chat" element={<Chat />} />
+        <Route path="chat" element={<Chat />} loader={ msgLoader} />
+        {/* <Route path='sidebar' element={<Sidebar /> } loader={convoLoader}/> */}
         <Route path='login' element={<Login />} />
         <Route path='signup' element={<Signup />} />
         <Route path="forgotpass" element={<ForgotPass />} />
