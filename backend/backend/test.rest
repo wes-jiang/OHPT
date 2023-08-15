@@ -13,8 +13,17 @@ Content-Type: application/json
 
 ###
 
+# POST http://127.0.0.1:8000/chat/course
+# Content-type:application/json
+
+# {"title":  "<id of user>", "id": "id"}
+
+# ###
+
 GET http://127.0.0.1:8000/chat/course/1
 Content-Type: application/json 
 
 {}
+
+
 

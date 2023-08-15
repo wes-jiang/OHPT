@@ -19,6 +19,7 @@ from django.http import HttpResponse
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
+from django.views.decorators.csrf import csrf_exempt
 
 def test(request):
     print("worked")
@@ -131,6 +132,7 @@ def conversation_details(request, pk):
 # def conversation_list(request):
 
 # '/course/<int:pk>'
+@csrf_exempt
 @api_view(['GET', 'POST'])
 def course_conversations(request, pk):
     """
@@ -142,7 +144,7 @@ def course_conversations(request, pk):
         {"title": ____, "id": _____}
     ]
     """
-
+    # return HttpResponse('<h1> hello </h1>')
     if request.method == 'GET':
         course = Course.objects.get(pk=pk)
         conversation_list = Conversation.objects.filter(course=course)
