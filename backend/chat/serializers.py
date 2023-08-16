@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import User, Conversation, Message
+from .models import Conversation, Message, User
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'email', 'password')
+        fields = ('id', 'first_name', 'last_name', 'username', 'password')
         # extra_kwargs = {'sections': {'required': False}}
 
 class ConversationSerializer(serializers.ModelSerializer):

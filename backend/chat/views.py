@@ -11,6 +11,7 @@ from .serializers import MessageSerializer, ConversationSerializer, UserSerializ
 # do i need to import User from django.contrib.auth.models?
 
 from rest_framework.authtoken.models import Token
+
 from django.shortcuts import get_object_or_404
 
 from django.http import HttpResponse
@@ -31,15 +32,21 @@ def signup(request):
     
     # validate
     if serializer.is_valid():
+
+        # TODO: check if username is already in use
+        
+
         # save the user to DB
         serializer.save()
 
         # retrieve the user as an object, then give that user a token
-        user = User.objects.get(email=request.data["email"])
+        user = User.objects.get(username=request.data["username"])
+        print(user)
+        print(type(user))
         token = Token.objects.create(user=user)
 
         # ??? how does this use the hashed password?
-        user.set_password(request.data.password)
+        user.set_password(request.data["password"])
         user.save()
 
         # return response containing token and the user data
@@ -53,15 +60,15 @@ def signup(request):
 @permission_classes([IsAuthenticated])
 def test_token(request):
     # why is this all that I need to do?
-    return Response("passed for {}".format(request.user.email))
+    return Response("passed for {}".format(request.user.username))
 
 
 @api_view(['GET'])
 def login(request):
-    user = get_object_or_404(User, email=request.data.email)
+    user = get_object_or_404(User, username=request.data["username"])
 
     # validate password
-    if not user.check_password(request.data.password):
+    if not user.check_password(request.data["password"]):
         # case where validation fails
         return Response({"detail": "not found."}, status=status.HTTP_404_NOT_FOUND)
     
