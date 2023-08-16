@@ -14,7 +14,6 @@ Content-Type: application/json
 
 ###
 
-
 GET http://127.0.0.1:8000/chat/login
 Content-Type: application/json 
 
@@ -30,7 +29,7 @@ Authorization: Token e501334078ab18c3f67cd806333031e7afaca3dc
 
 ###
 
-#Create Conversation for that course
+#Create Conversation
 POST http://127.0.0.1:8000/chat/course/1
 Content-Type: application/json 
 

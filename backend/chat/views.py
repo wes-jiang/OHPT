@@ -34,7 +34,9 @@ def signup(request):
     if serializer.is_valid():
 
         # TODO: check if username is already in use
-        
+        old_user = User.objects.get(username=request.data["username"])
+        if old_user is not None:
+            return Response("account with username already exists", status=status.HTTP_400_BAD_REQUEST)
 
         # save the user to DB
         serializer.save()
@@ -53,8 +55,32 @@ def signup(request):
         return Response({"token": token.key, "user": serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['PUT'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def edit_user(request):
+    """
+    Edits user information.
+    request: {
+        "first_name": string
+        "last_name": string
+    }
+    """
+    # retrieve user
+    user = request.user
+
+    new_first_name = request.data["first_name"]
+    new_last_name = request.data["last_name"]
+
+    if new_first_name is not None:
+        user.first_name = new_first_name
+    if new_last_name is not None:
+        user.last_name = new_last_name
+
+    return Response("passed for {}".format(request.user.username))
 
 # TODO: understand what these are doing from tutorial
+# EXAMPLE
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
