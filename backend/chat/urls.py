@@ -9,7 +9,9 @@ urlpatterns = [
 
     path('signup', views.signup),
     path('login', views.login),
-    path('validate', views.test_token)
-    # path('drinks/<int:id>', views.drink_detail)
+    path('validate', views.test_token),
+
+    path('message', views.message)
+    
 ]
 

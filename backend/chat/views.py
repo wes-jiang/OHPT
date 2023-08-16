@@ -110,7 +110,8 @@ def conversation_details(request, pk):
 
     elif request.method == 'POST':
         data = request.data
-        data["time_sent"] = timezone.now
+        data["time_sent"] = timezone.now()
+        print(data["time_sent"])
         serializer = MessageSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -120,7 +121,9 @@ def conversation_details(request, pk):
     elif request.method == 'PUT':
         # retrieve correct conversation, then update title
         conversation = Conversation.objects.get(pk=pk)
-        conversation.title = request.data.title
+        new_title = request.data.title
+        if new_title is not None:
+            conversation.title = new_title
 
         # save
         conversation.save()
@@ -155,12 +158,13 @@ def course_conversations(request, pk):
                 "title": conversation.title,
                 "id": conversation.pk 
             })
+        print(len(return_list))
         return Response(return_list)
 
     elif request.method == 'POST':
         # add time
         data = request.data
-        data["time_started"] = timezone.now
+        data["time_started"] = timezone.now()
 
         serializer = ConversationSerializer(data=data)
         if serializer.is_valid():
@@ -168,5 +172,25 @@ def course_conversations(request, pk):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# '/message'
+@api_view(["PUT"])
+def message(request):
+    """
+    Edits (basically just the starred field) the message specified by pk in the request.
+    request: {
+        pk: int
+    }
+    """
+    # get message associated with the passed in pk
+    message = Message.objects.get(pk=request.data.pk) 
 
-
+    # update fields that are contained within the request data
+    # check if we star or not
+    starred = request.data.get("starred")
+    if starred is not None:
+        message.starred = starred
+    
+    message.save()
+    serializer = MessageSerializer(message, many=None)
+    return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        

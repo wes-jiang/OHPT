@@ -35,6 +35,7 @@ DEBUG = True
 
 INSTALLED_APPS = [
     "chat.apps.ChatConfig",
+    "rest_framework.authtoken",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

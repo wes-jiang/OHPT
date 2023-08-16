@@ -1,4 +1,38 @@
 
+#Create User
+POST http://127.0.0.1:8000/chat/signup
+Content-Type: application/json 
+
+{"first_name": "Austen", "last_name": "Liao", "email": "austenliao@berkeley.edu", "password": "pass"}
+
+###
+
+POST http://127.0.0.1:8000/chat/signup
+Content-Type: application/json 
+
+{"first_name": "Lyna", "last_name": "Jiang", "email": "lyna3jiang@berkeley.edu", "password": "pass"}
+
+###
+
+
+#Create Conversation
+POST http://127.0.0.1:8000/chat/course/1
+Content-Type: application/json 
+
+{"title": "New Conversation", "user": 1, "course": 1}
+
+
+###
+
+
+GET http://127.0.0.1:8000/chat/course/1
+Content-Type: application/json 
+
+{}
+
+###
+
+#Create Messages
 POST http://127.0.0.1:8000/chat/conversation/1
 Content-Type: application/json 
 
@@ -23,19 +57,9 @@ Content-Type: application/json
 GET http://127.0.0.1:8000/chat/course/1
 Content-Type: application/json 
 
-{}
+
+
 
 ###
 
-POST http://127.0.0.1:8000/chat/signup
-Content-Type: application/json 
-
-{"first_name": "Austen", "last_name": "Liao", "email": "austenliao@berkeley.edu", "password": "pass"}
-
-###
-
-POST http://127.0.0.1:8000/chat/course/1
-Content-Type: application/json 
-
-{"title": "New Conversation", "user": 1, "course": 1}
 
