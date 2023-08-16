@@ -29,7 +29,8 @@ const Messages = ({messages}) => {
   const MsgAssistTextColor = useColorModeValue("black", "white")
 
   const conversationId = 1
-  const loadMessages = useLoaderData(msgLoader, conversationId)
+  const loadMessages = useLoaderData(msgLoader(conversationId))
+  console.log(loadMessages)
 
   const AllMessages = [...loadMessages, ...messages]
   return (
@@ -102,10 +103,12 @@ const Messages = ({messages}) => {
 
 export default Messages
 
-export const msgLoader = async (conversationId) => {
+export const msgLoader = (conversationId) => async () => {
     console.log('hi')
-    // const res = await fetch(`http://127.0.0.1:8000/chat/conversation/${conversationId}`)
-    const res = await fetch(`http://127.0.0.1:8000/chat/conversation/1`)
+    const res = await fetch(`http://127.0.0.1:8000/chat/conversation/${conversationId}`)
+    // const res = await fetch(`http://127.0.0.1:8000/chat/conversation/1`)
     const hi = res.json()
+    console.log("reading")
+    console.log(hi)
     return hi
   }

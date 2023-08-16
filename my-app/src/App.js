@@ -16,7 +16,7 @@ import FAQ from './pages/help/FAQ'
 import Chat from './pages/chat/Chat'
 import NotFound from './pages/NotFound'
 
-import { convoLoader } from './components/chat/Sidebar';
+import Sidebar, { convoLoader } from './components/chat/Sidebar';
 import { msgLoader } from './components/chat/Messages';
 
 
@@ -43,12 +43,15 @@ const router = createBrowserRouter(
           <Route path="faq" element={<FAQ />} />
           <Route path="contact" element={<Contact />} />
         </Route>
-        <Route path="chat" element={<Chat />} loader={ msgLoader} />
+        <Route path="chat" element={<Chat />} loader={convoLoader} />
         {/* <Route path='sidebar' element={<Sidebar /> } loader={convoLoader}/> */}
         <Route path='login' element={<Login />} />
         <Route path='signup' element={<Signup />} />
         <Route path="forgotpass" element={<ForgotPass />} />
         <Route path="userProfileEdit" element={<UserProfileEdit />} />
+        <Route path="/chat/conversation/:pageId" element={<Chat />} loader={convoLoader}>
+          console.log("chat page")
+          </Route>
         <Route path="*" element={<NotFound />} />
       </Route>
   )

@@ -109,26 +109,11 @@ const Sidebar = () => {
       </NavLink>
 
       {convos.map(convo => (
-        <Link to="/" key={convo.id}>
+        <Link to={`/chat/conversation/${convo.id}`} key={convo.id}>
           <Text> {convo.title} </Text>
         </Link>
       ))}
-      
 
-                {/* <GridItem>
-                  <Textarea 
-                    value={value}
-                    onChange={handleInputChange}
-                    placeholder=''
-                    size='sm'>
-                  </Textarea>
-                </GridItem> */}
-            
-            {/* <input
-              type="text"
-              placeholder="Enter new item"
-              onChange={(e) => handleAddItem(e.target.value)}
-            /> */}
     </div>
   )
 }
@@ -136,8 +121,8 @@ const Sidebar = () => {
 export default Sidebar;
 
 export const convoLoader = async () => {
-  console.log('hi')
+  // console.log('hi')
   const res = await fetch('http://127.0.0.1:8000/chat/course/1')
-  console.log("hi")
+  // console.log("hi")
   return res.json()
 }

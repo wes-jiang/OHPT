@@ -45,6 +45,7 @@ const Chat = () => {
   const [inputMessage, setInputMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isRegenerating, setIsRegenerating] = useState(false)
+  const [conversationId, setConversationId] = useState([])
 
   const handleSendMessage = () => {
     if (!inputMessage.trim().length) {
@@ -61,7 +62,7 @@ const Chat = () => {
     setIsLoading(true)
     setIsRegenerating(true)
 
-    fetch(`http://127.0.0.1:8000/chat/conversation/1`, {
+    fetch(`http://127.0.0.1:8000/chat/conversation/${conversationId}`, {
       method: 'POST',
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(data)
@@ -74,9 +75,6 @@ const Chat = () => {
     }
 
     )
-
-
-    
 
     setTimeout(() => {
       setMessages((old) => [...old, { sender: "OHPT", content: "reply", conversation: '1' }]);
@@ -220,5 +218,15 @@ const Chat = () => {
 
   export default Chat
 
+// fetch(`http://127.0.0.1:8000/chat/conversation/1`, {
+//   method: 'POST',
+//   headers: {"Content-Type": "application/json"},
+//   body: JSON.stringify(data)
+// }).then(() => {
+//   console.log('data added')
+//   setMessages((old) => [...old, {sender: "user", content: inputMessage, conversation: '1'}])
+//   // console.log()
+//   setInputMessage("")
 
+// }
 

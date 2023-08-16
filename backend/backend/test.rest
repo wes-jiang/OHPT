@@ -30,7 +30,7 @@ Authorization: Token e501334078ab18c3f67cd806333031e7afaca3dc
 
 ###
 
-#Create Conversation
+#Create Conversation for that course
 POST http://127.0.0.1:8000/chat/course/1
 Content-Type: application/json 
 
