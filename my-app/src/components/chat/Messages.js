@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useState , useRef } from "react"
 import { Flex, 
     Text, 
     Avatar, 
@@ -8,17 +8,30 @@ import { Flex,
     } from "@chakra-ui/react"
 import { StarIcon } from "@chakra-ui/icons";
 import BeatLoader from "react-spinners/BeatLoader"
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useParams } from "react-router-dom";
+
+import { loadConvoMsg, loadMessages } from "../../pages/chat/loader";
+
+import { fetchData } from "../../pages/chat/Chat";
 
 const Messages = ({messages}) => {
     const chatContainerRef = useRef(null)
-
-    /*
+    const [loadedData, setLoadedData] = useState(null)
+    const { conversationId } = useParams()
+    
+    console.log('messages33', conversationId)
     useEffect(() => {
-    // Scroll to the bottom
-        chatContainerRef.current.scrollTop = chatContainerRef.current.;
-    }, [messages]); // Include messages as a dependency to trigger the effect when a new message is added
-    */
+        fetchData({ conversationId: conversationId, courseId: null })
+          .then((fetchData) => {
+            console.log("Conversation Data:", fetchData);
+            setLoadedData(fetchData);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }, [conversationId]);
+
+    
 
   //Colors for the User
   const MsgUserBackColor = useColorModeValue("white", "dark-gray")
@@ -28,11 +41,13 @@ const Messages = ({messages}) => {
   const MsgAssistBackColor = useColorModeValue("gray.100", "gray.800")
   const MsgAssistTextColor = useColorModeValue("black", "white")
 
-  const conversationId = 1
-  const loadMessages = useLoaderData(msgLoader(conversationId))
-  console.log(loadMessages)
 
-  const AllMessages = [...loadMessages, ...messages]
+  console.log('messagesConversation', conversationId)
+
+  console.log('loadedData', loadedData)
+  const AllMessages = [...(loadedData ? loadedData : []), ...messages]
+  console.log('allmsg', AllMessages)
+
   return (
     <Flex 
         w="100%" 
@@ -103,12 +118,3 @@ const Messages = ({messages}) => {
 
 export default Messages
 
-export const msgLoader = (conversationId) => async () => {
-    console.log('hi')
-    const res = await fetch(`http://127.0.0.1:8000/chat/conversation/${conversationId}`)
-    // const res = await fetch(`http://127.0.0.1:8000/chat/conversation/1`)
-    const hi = res.json()
-    console.log("reading")
-    console.log(hi)
-    return hi
-  }

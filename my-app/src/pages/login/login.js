@@ -12,6 +12,7 @@ import { NavLink } from 'react-router-dom'
 
 import LoginCard from './loginCard'
 import Signup from './signup'
+// import Signup from './newSignup'
 function Login() {
     return (
         <Flex

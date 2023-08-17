@@ -9,7 +9,7 @@ import {
   } from '@chakra-ui/react'
 
 
-import { Link, useLoaderData } from "react-router-dom"
+import { useLoaderData, useParams, useLocation } from "react-router-dom"
 
 import {FaStop} from 'react-icons/fa'
 
@@ -20,6 +20,7 @@ import React, { forwardRef, useState } from "react";
 import BeatLoader from "react-spinners/BeatLoader"
 import Messages from '../../components/chat/Messages'
 import Sidebar from '../../components/chat/Sidebar';
+import { loadConvoMsg } from './loader'
 
 
 const CustomInput = forwardRef((props, ref) => {
@@ -46,12 +47,25 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isRegenerating, setIsRegenerating] = useState(false)
   const [conversationId, setConversationId] = useState([])
+  const location = useLocation()
+
+  // const { pageId } = useParams();
+  // const loaderFunction = loadConvoMsg({ courseId: 1, conversationId: pageId });
+  // const loadedData = useLoaderData(loaderFunction);
+
+  // console.log('Loaded Data:', loadedData);
+
+  // const load = useLoaderData()
+  // console.log(load)
+  console.log(messages)
+  console.log(Array.isArray(messages))
 
   const handleSendMessage = () => {
     if (!inputMessage.trim().length) {
       return;
     }
 
+    
     const dataMsg = inputMessage
     const data = {
       sender: "user", 
@@ -72,9 +86,7 @@ const Chat = () => {
       // console.log()
       setInputMessage("")
 
-    }
-
-    )
+    })
 
     setTimeout(() => {
       setMessages((old) => [...old, { sender: "OHPT", content: "reply", conversation: '1' }]);
@@ -91,7 +103,16 @@ const Chat = () => {
   }, 1000)
   }
 
-  const chats = useLoaderData()
+  fetchData({conversationId: 1, courseId: null}).then((conversationData) => {
+    console.log("Conversation Data1:", conversationData);
+    const hello = conversationData
+    
+    // Now you can use conversationData outside the function scope
+  })
+  .catch((error) => {
+    // Handle the error
+    console.error("Error:", error);
+  });
 
   const SidebarColor = useColorModeValue("gray", "black")
   const TextColor = useColorModeValue('black', 'white')
@@ -140,6 +161,7 @@ const Chat = () => {
             <Messages messages={messages}/>
           </Flex>
 
+
           <Flex 
             className="input-buttons-container"
             alignItems="center"
@@ -155,7 +177,6 @@ const Chat = () => {
                 ml='auto'
                 // justifyContent={'center'}
                 mb={2}
-                
                 >
                 <Button 
                   // disabled={isRegenerating}
@@ -203,8 +224,6 @@ const Chat = () => {
 
 
               </Flex>
-              
-              
 
             </Flex>
           </Flex>
@@ -218,15 +237,24 @@ const Chat = () => {
 
   export default Chat
 
-// fetch(`http://127.0.0.1:8000/chat/conversation/1`, {
-//   method: 'POST',
-//   headers: {"Content-Type": "application/json"},
-//   body: JSON.stringify(data)
-// }).then(() => {
-//   console.log('data added')
-//   setMessages((old) => [...old, {sender: "user", content: inputMessage, conversation: '1'}])
-//   // console.log()
-//   setInputMessage("")
+  export async function fetchData({conversationId, courseId}) {
+    try {
+      console.log('conversationlog', conversationId)
+      const fetchData = null
+      if (conversationId) {
+        const fetchData = await loadConvoMsg({ conversationId: conversationId, courseId: courseId });
+        return fetchData
 
-// }
+      }
+      else if (courseId) {
+        const fetchData = await loadConvoMsg({ conversationId: conversationId, courseId: courseId })
+        return fetchData
+      }
+      else {
+        return fetchData
+      }
+    } catch (error) {
+      console.error("Error loading conversation data:", error);
+    }
+  }
 

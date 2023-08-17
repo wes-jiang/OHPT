@@ -15,22 +15,24 @@ import Contact from './pages/help/Contact'
 import FAQ from './pages/help/FAQ'
 import Chat from './pages/chat/Chat'
 import NotFound from './pages/NotFound'
+import NewChat from './pages/chat/newChat'
 
-import Sidebar, { convoLoader } from './components/chat/Sidebar';
-import { msgLoader } from './components/chat/Messages';
+import Sidebar from './components/chat/Sidebar';
+import Messages from './components/chat/Messages';
+import { loadConversations, loadMessages, loadConvoMsg } from './pages/chat/loader';
 
 
 import { 
   createBrowserRouter, 
   createRoutesFromElements, 
   Route, 
-  RouterProvider 
+  RouterProvider,
+  useParams
 } from 'react-router-dom';
 import Login from './pages/login/login';
 import Signup from './pages/login/signup';
 import ForgotPass from './pages/login/forgotPass';
 import UserProfileEdit from './pages/login/userProfileEdit';
-
 
 
 const router = createBrowserRouter(
@@ -43,15 +45,13 @@ const router = createBrowserRouter(
           <Route path="faq" element={<FAQ />} />
           <Route path="contact" element={<Contact />} />
         </Route>
-        <Route path="chat" element={<Chat />} loader={convoLoader} />
-        {/* <Route path='sidebar' element={<Sidebar /> } loader={convoLoader}/> */}
+        <Route path="chat" element={<NewChat />} />
+        <Route path='/chat/conversation/:conversationId' element={<NewChat />} />
         <Route path='login' element={<Login />} />
         <Route path='signup' element={<Signup />} />
         <Route path="forgotpass" element={<ForgotPass />} />
         <Route path="userProfileEdit" element={<UserProfileEdit />} />
-        <Route path="/chat/conversation/:pageId" element={<Chat />} loader={convoLoader}>
-          console.log("chat page")
-          </Route>
+
         <Route path="*" element={<NotFound />} />
       </Route>
   )
