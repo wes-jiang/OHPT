@@ -34,9 +34,16 @@ def signup(request):
     if serializer.is_valid():
 
         # TODO: check if username is already in use
-        old_user = User.objects.get(username=request.data["username"])
-        if old_user is not None:
-            return Response("account with username already exists", status=status.HTTP_400_BAD_REQUEST)
+        # old_user = User.objects.get(username=request.data["username"])
+        # if old_user is not None:
+        #     return Response("account with username already exists", status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            old_user = User.objects.get(username=request.data["username"])
+            return Response("An account with this username already exists.", status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            # Continue with user registration
+            pass
 
         # save the user to DB
         serializer.save()
