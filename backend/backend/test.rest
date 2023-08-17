@@ -30,10 +30,10 @@ Authorization: Token e501334078ab18c3f67cd806333031e7afaca3dc
 ###
 
 #Create Conversation
-POST http://127.0.0.1:8000/chat/course/1
+POST http://127.0.0.1:8000/chat/course/2
 Content-Type: application/json 
 
-{"title": "New Conversation", "user": 1, "course": 1}
+{"title": "L", "user": 1, "course": 2}
 
 
 ###
@@ -47,14 +47,14 @@ Content-Type: application/json
 ###
 
 #Create Messages
-POST http://127.0.0.1:8000/chat/conversation/1
+POST http://127.0.0.1:8000/chat/conversation/2
 Content-Type: application/json 
 
-{"sender": "user", "content": "test message", "conversation": 1}
+{"sender": "user", "content": "test message hi", "conversation": 25}
 
 ###
 
-GET http://127.0.0.1:8000/chat/conversation/1
+GET http://127.0.0.1:8000/chat/conversation/25
 Content-Type: application/json 
 
 {}
