@@ -3,21 +3,32 @@
 POST http://127.0.0.1:8000/chat/signup
 Content-Type: application/json 
 
-{"first_name": "kirby", "last_name": "Liao", "username": "kirbyliao@berkeley.edu", "password": "pass"}
+{"first_name": "kirby", "last_name": "Liao", "username": "kirby2liao@berkeley.edu", "password": "pass"}
 
 ###
 
 POST http://127.0.0.1:8000/chat/signup
 Content-Type: application/json 
 
-{"first_name": "Lyna", "last_name": "Jiang", "username": "lynajiang@berkeley.edu", "password": "pass"}
+{"first_name": "Lyna", "last_name": "Jiang", "username": "lynaj2iang@berkeley.edu", "password": "pass"}
 
 ###
 
+# Edit user information
+PUT http://127.0.0.1:8000/edit_user
+Content-Type: application/json
+Authorization: Token your_access_token
+
+{
+  "first_name": "New First Name",
+  "last_name": "New Last Name"
+}
+
+###
 POST http://127.0.0.1:8000/chat/login
 Content-Type: application/json 
 
-{"username": "kirbyliao@berkeley.edu", "password": "pass"}
+{"username": "kirby2liao@berkeley.edu", "password": "pass"}
 
 ###
 
@@ -54,10 +65,30 @@ Content-Type: application/json
 
 ###
 
-GET http://127.0.0.1:8000/chat/conversation/25
+GET http://127.0.0.1:8000/chat/conversation/1
 Content-Type: application/json 
 
 {}
+
+###
+
+
+#Star a message
+PUT http://127.0.0.1:8000/chat/message/1
+Content-Type: application/json
+Authorization: Token your_access_token
+
+{"starred": true}
+
+###
+
+#Unstar a message
+PUT http://127.0.0.1:8000/chat/message/1
+#path: messages/messageId/star
+Content-Type: application/json
+Authorization: Token your_access_token
+
+{"starred": false}
 
 ###
 

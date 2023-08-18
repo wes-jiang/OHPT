@@ -225,25 +225,33 @@ def course_conversations(request, pk):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# '/message'
+# 'messages/<int:message_id>/star'
+@csrf_exempt
 @api_view(["PUT"])
-def message(request):
+def edit_star(request, pk):
     """
     Edits (basically just the starred field) the message specified by pk in the request.
     request: {
-        pk: int
+        "starred": boolean
     }
     """
     # get message associated with the passed in pk
-    message = Message.objects.get(pk=request.data.pk) 
+    # pk = request.data.get("pk")
+    try:
+        message = Message.objects.get(pk=pk) 
+    
+    except Message.DoesNotExist:
+        return "hi"
+        return Response({"error": "Message not found"}, status=status.HTTP_404_NOT_FOUND)
+    
 
     # update fields that are contained within the request data
     # check if we star or not
     starred = request.data.get("starred")
     if starred is not None:
         message.starred = starred
-    
-    message.save()
+        message.save()
+
     serializer = MessageSerializer(message, many=None)
     return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         
