@@ -10,7 +10,7 @@ Content-Type: application/json
 POST http://127.0.0.1:8000/chat/signup
 Content-Type: application/json 
 
-{"first_name": "Lyna", "last_name": "Jiang", "username": "lynaj2iang@berkeley.edu", "password": "pass"}
+{"first_name": "Lyna", "last_name": "Jiang", "username": "lyna2jiang@berkeley.edu", "password": "pass"}
 
 ###
 
@@ -34,10 +34,18 @@ Content-Type: application/json
 
 GET http://127.0.0.1:8000/chat/validate
 Content-Type: application/json 
-Authorization: Token e501334078ab18c3f67cd806333031e7afaca3dc
+Authorization: Token 554fece4e5f034eeb5d7ce114a809e7d8107a093
 
 {}
 
+###
+
+#Get user_id
+GET http://127.0.0.1:8000/chat/get_user_id
+Content-Type: application/json
+Authorization: Token your_access_token
+
+{}
 ###
 
 #Create Conversation
@@ -87,7 +95,7 @@ Content-Type: application/json
 
 ###
 
-GET http://127.0.0.1:8000/chat/conversation/1
+GET http://127.0.0.1:8000/chat/conversation/5
 Content-Type: application/json 
 
 {}
@@ -96,7 +104,7 @@ Content-Type: application/json
 
 
 #Star a message
-PUT http://127.0.0.1:8000/chat/message/star/1
+PUT http://127.0.0.1:8000/chat/message/star/13
 Content-Type: application/json
 Authorization: Token your_access_token
 
@@ -105,7 +113,7 @@ Authorization: Token your_access_token
 ###
 
 #Unstar a message
-PUT http://127.0.0.1:8000/chat/message/star/1
+PUT http://127.0.0.1:8000/chat/message/star/22
 #path: messages/messageId/star
 Content-Type: application/json
 Authorization: Token your_access_token

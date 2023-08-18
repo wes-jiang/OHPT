@@ -11,7 +11,8 @@ urlpatterns = [
     path('login', views.login),
     path('validate', views.test_token),
     path('edit_user', views.edit_user),
-    path('message/star/<int:pk>', views.edit_star)
+    path('message/star/<int:pk>', views.edit_star),
+    path('get_user_id', views.get_user_id)
 
 
     

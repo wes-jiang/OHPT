@@ -95,6 +95,13 @@ def test_token(request):
     return Response("passed for {}".format(request.user.username))
 
 
+@api_view(['GET'])
+def get_user_id(request):
+    if request.user is not None:
+        return Response(request.user.id)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['POST'])
 def login(request):
     user = get_object_or_404(User, username=request.data["username"])
@@ -141,7 +148,7 @@ def conversation_details(request, pk):
         user = User.objects.get(pk=1)
         conversation = Conversation.objects.get(pk=pk)
 
-        messages = Message.objects.filter(conversation=conversation)
+        messages = Message.objects.filter(conversation=conversation).order_by('time_sent')
         serializer = MessageSerializer(messages, many=True)
         print(serializer)
         return Response(serializer.data)
@@ -261,6 +268,7 @@ def edit_star(request, pk):
     # pk = request.data.get("pk")
     try:
         message = Message.objects.get(pk=pk) 
+        print('request', pk)
     
     except Message.DoesNotExist:
         return Response({"error": "Message not found"}, status=status.HTTP_404_NOT_FOUND)
