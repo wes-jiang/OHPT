@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.utils import timezone
+from datetime import datetime, timedelta
 
 # Create your views here.
 from rest_framework import status
@@ -203,16 +204,36 @@ def course_conversations(request, pk):
     # return HttpResponse('<h1> hello </h1>')
     if request.method == 'GET':
         course = Course.objects.get(pk=pk)
-        conversation_list = Conversation.objects.filter(course=course)
+        today = timezone.now().date()
+        yesterday = today - timedelta(days=1)
+        seven_days_ago = today - timedelta(days=7)
+        thirty_days_ago = today - timedelta(days=30)
+        # conversation_list = Conversation.objects.filter(course=course).order_by('-time_started')
 
-        return_list = []
-        for conversation in conversation_list:
-            return_list.append({
-                "title": conversation.title,
-                "id": conversation.pk 
-            })
-        print(len(return_list))
-        return Response(return_list)
+        conversation_list = Conversation.objects.filter(course=course)
+        today_conversations = conversation_list.filter(time_started__date=today)
+        yesterday_conversations = conversation_list.filter(time_started__date=yesterday)
+
+        past_seven_days_conversations = Conversation.objects.filter(
+            time_started__date__range=[seven_days_ago, yesterday]
+            )
+        past_thirty_days_conversations = Conversation.objects.filter(
+            time_started__date__range=[thirty_days_ago, yesterday]
+            )
+
+        today_serializer = ConversationSerializer(today_conversations, many=True)
+        yesterday_serializer = ConversationSerializer(yesterday_conversations, many=True)
+        past_seven_days_serializer = ConversationSerializer(past_seven_days_conversations, many=True)
+        past_thirty_days_serializer = ConversationSerializer(past_thirty_days_conversations, many=True)
+        
+        context = {
+            'today_conversations': today_serializer.data,
+            'yesterday_conversations': yesterday_serializer.data,
+            'past_seven_days_conversations': past_seven_days_serializer.data,
+            'past_thirty_days_conversations': past_thirty_days_serializer.data,
+        }
+
+        return Response(context)
 
     elif request.method == 'POST':
         # add time

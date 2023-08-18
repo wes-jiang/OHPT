@@ -49,11 +49,13 @@ Content-Type: application/json
 
 ###
 
-
+# Get list of conversations
 GET http://127.0.0.1:8000/chat/course/1
 Content-Type: application/json 
 
 {}
+
+#returns title, id, time_started
 
 ###
 
@@ -74,10 +76,14 @@ Content-Type: application/json
 ###
 
 #Create Messages
-POST http://127.0.0.1:8000/chat/conversation/2
+POST http://127.0.0.1:8000/chat/conversation/1
 Content-Type: application/json 
 
 {"sender": "user", "content": "test message hi", "conversation": 1}
+
+#pathname: chat/conversation/conversationID
+
+#then this means that content may not need "conversation"
 
 ###
 
@@ -123,13 +129,5 @@ Authorization: Token your_access_token
 # {"title":  "<id of user>", "id": "id"}
 
 # ###
-
-GET http://127.0.0.1:8000/chat/course/1
-Content-Type: application/json 
-
-
-
-
-###
 
 
