@@ -14,7 +14,7 @@ Content-Type: application/json
 
 ###
 
-GET http://127.0.0.1:8000/chat/login
+POST http://127.0.0.1:8000/chat/login
 Content-Type: application/json 
 
 {"username": "kirbyliao@berkeley.edu", "password": "pass"}
@@ -33,7 +33,7 @@ Authorization: Token e501334078ab18c3f67cd806333031e7afaca3dc
 POST http://127.0.0.1:8000/chat/course/1
 Content-Type: application/json 
 
-{"title": "L", "user": 13, "course": 1}
+{"title": "L", "user": 2, "course": 1}
 
 
 ###
@@ -50,7 +50,7 @@ Content-Type: application/json
 POST http://127.0.0.1:8000/chat/conversation/2
 Content-Type: application/json 
 
-{"sender": "user", "content": "test message hi", "conversation": 25}
+{"sender": "user", "content": "test message hi", "conversation": 1}
 
 ###
 

@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
@@ -28,12 +29,20 @@ class Conversation(models.Model):
     def __str__(self):
         return self.title
 
+
+def get_sources_default():
+    return []
 class Message(models.Model):
+
+    
     sender = models.CharField(max_length=50)
     content = models.TextField()
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
     starred = models.BooleanField(default=False)
     time_sent = models.DateTimeField(default=timezone.now)
+    sources = ArrayField(models.CharField(max_length=50), default=get_sources_default)
+
+
     
 
 

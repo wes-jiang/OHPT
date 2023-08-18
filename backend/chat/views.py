@@ -22,9 +22,9 @@ from rest_framework.authentication import TokenAuthentication, SessionAuthentica
 from rest_framework.permissions import IsAuthenticated
 from django.views.decorators.csrf import csrf_exempt
 
-def test(request):
-    print("worked")
-    return HttpResponse('<h1>test</h1>')
+######################
+### AUTHENTICATION ###
+######################
 
 @api_view(['POST'])
 def signup(request):
@@ -50,8 +50,6 @@ def signup(request):
 
         # retrieve the user as an object, then give that user a token
         user = User.objects.get(username=request.data["username"])
-        print(user)
-        print(type(user))
         token = Token.objects.create(user=user)
 
         # ??? how does this use the hashed password?
@@ -96,7 +94,7 @@ def test_token(request):
     return Response("passed for {}".format(request.user.username))
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def login(request):
     user = get_object_or_404(User, username=request.data["username"])
 
@@ -115,7 +113,7 @@ def login(request):
         
 
 # /conversation/<int:pk>
-@api_view(['GET', 'POST', 'PUT'])
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def conversation_details(request, pk):
     """
     get all messages from specified conversation, then serialize them
@@ -148,10 +146,15 @@ def conversation_details(request, pk):
         return Response(serializer.data)
 
 
+    # create a message
     elif request.method == 'POST':
         data = request.data
         data["time_sent"] = timezone.now()
-        print(data["time_sent"])
+
+
+        # TODO: OpenAI goes here
+        
+
         serializer = MessageSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -168,6 +171,16 @@ def conversation_details(request, pk):
         # save
         conversation.save()
         return Response(status=status.HTTP_200_OK)
+
+    elif request.method == 'DELETE':
+        conversation = Conversation.objects.get(pk=pk)
+        if conversation is not None:
+            conversation.delete()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response("conversation not found", status=status.HTTP_400_BAD_REQUEST)
+        
+    
         
 
 
