@@ -164,13 +164,13 @@ def conversation_details(request, pk):
     elif request.method == 'PUT':
         # retrieve correct conversation, then update title
         conversation = Conversation.objects.get(pk=pk)
-        new_title = request.data.title
+        new_title = request.data['title']
         if new_title is not None:
             conversation.title = new_title
-
-        # save
-        conversation.save()
-        return Response(status=status.HTTP_200_OK)
+            # save
+            conversation.save()
+        serializer = ConversationSerializer(conversation, many=None)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     elif request.method == 'DELETE':
         conversation = Conversation.objects.get(pk=pk)
@@ -225,7 +225,8 @@ def course_conversations(request, pk):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# 'messages/<int:message_id>/star'
+
+# 'messages/star/<int:pk>'
 @csrf_exempt
 @api_view(["PUT"])
 def edit_star(request, pk):
@@ -241,7 +242,6 @@ def edit_star(request, pk):
         message = Message.objects.get(pk=pk) 
     
     except Message.DoesNotExist:
-        return "hi"
         return Response({"error": "Message not found"}, status=status.HTTP_404_NOT_FOUND)
     
 

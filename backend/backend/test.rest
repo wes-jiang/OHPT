@@ -15,7 +15,7 @@ Content-Type: application/json
 ###
 
 # Edit user information
-PUT http://127.0.0.1:8000/edit_user
+PUT http://127.0.0.1:8000/chat/edit_user
 Content-Type: application/json
 Authorization: Token your_access_token
 
@@ -57,6 +57,22 @@ Content-Type: application/json
 
 ###
 
+#Change conversation title
+PUT http://127.0.0.1:8000/chat/conversation/1
+Content-Type: application/json
+
+{"title": "newTitle"}
+
+###
+
+#Delete Conversation
+DELETE http://127.0.0.1:8000/chat/conversation/1
+Content-Type: application/json
+
+{}
+
+###
+
 #Create Messages
 POST http://127.0.0.1:8000/chat/conversation/2
 Content-Type: application/json 
@@ -74,7 +90,7 @@ Content-Type: application/json
 
 
 #Star a message
-PUT http://127.0.0.1:8000/chat/message/1
+PUT http://127.0.0.1:8000/chat/message/star/1
 Content-Type: application/json
 Authorization: Token your_access_token
 
@@ -83,12 +99,21 @@ Authorization: Token your_access_token
 ###
 
 #Unstar a message
-PUT http://127.0.0.1:8000/chat/message/1
+PUT http://127.0.0.1:8000/chat/message/star/1
 #path: messages/messageId/star
 Content-Type: application/json
 Authorization: Token your_access_token
 
 {"starred": false}
+
+###
+
+#Fetch source information
+GET http://127.0.0.1:8000/chat/source/1
+Content-Type: application/json
+Authorization: Token your_access_token
+
+{}
 
 ###
 
