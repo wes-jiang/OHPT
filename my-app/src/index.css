@@ -65,6 +65,7 @@ p {
 
 header nav {
   display: flex;
+  position: sticky;
   padding: 20px;
   gap: 50px;
   align-items: center; /* Align items vertically */
@@ -220,4 +221,31 @@ form label span {
 }
 
 
-/*  */
+/*Sidebar */
+.sidebar-container {
+  position: relative;
+  width: 300px; /* Adjust the width as needed */
+  height: 100vh;
+  overflow: hidden; /* Hide any overflow beyond the sidebar container */
+  border-right: 1px solid #ddd;
+}
+
+.sidebar {
+  height: 100%; /* Occupy full height of sidebar container */
+  overflow-y: auto; /* Enable scrolling within the sidebar */
+  padding: 20px;
+}
+
+/* Custom styles for the scrollbar */
+.sidebar::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent; /* Background color of the scrollbar track */
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Rounded corners for the scrollbar thumb */
+}

@@ -9,7 +9,7 @@ import { Button,
 
 import ThemeToggle from "./ThemeToggle"
 
-export default function NavBar() {
+export default function NavBar({isVisible}) {
   const { colorMode } = useColorMode();
 
   //Color Definitions
@@ -27,26 +27,29 @@ export default function NavBar() {
   const visiblePaths = ['/', '/about', '/help', '/team', '/chat', '/login']
   const checkNavPath = visiblePaths.includes(location.pathname)
   return (
-    <div className="navbar">
-      <header>
-        <nav>
-          <h1> 
-            <NavLink to="/">OHPT</NavLink>
-          </h1>
-          <NavLink to="about">About</NavLink>
-          <NavLink to="help">Help</NavLink>
-          <NavLink to="team">Team</NavLink>
-          <NavLink to="chat">Chat</NavLink>
-          <ThemeToggle />
-          <NavLink to='login'>
-            <Button> Login </Button>
-          </NavLink>
-        </nav>
-      </header>
-      <main>
-        <Outlet />
-      </main>
-    </div>
+      <div className="navbar"
+      >
+        <header>
+          <Collapse in={isVisible}>
+            <nav>
+              <h1> 
+                <NavLink to="/">OHPT</NavLink>
+              </h1>
+              <NavLink to="about">About</NavLink>
+              <NavLink to="help">Help</NavLink>
+              <NavLink to="team">Team</NavLink>
+              <NavLink to="chat">Chat</NavLink>
+              <ThemeToggle />
+              <NavLink to='login'>
+                <Button> Login </Button>
+              </NavLink>
+            </nav>
+          </Collapse>
+        </header>
+        <main>
+          <Outlet />
+        </main>
+      </div>
   )
 }
 

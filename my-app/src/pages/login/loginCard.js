@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 import {
     Box,
@@ -18,18 +18,21 @@ import {
     Text,
     useColorModeValue,
 } from '@chakra-ui/react'
-import { NavLink, useLoaderData } from 'react-router-dom'
+import { NavLink, useLoaderData, useNavigate } from 'react-router-dom'
 import { Field, Form, Formik } from 'formik';
+
+import { SetCookie } from '../../cookieUtils';
 
 function Login() {
     const backColor = useColorModeValue('white', 'gray.800')
     const boxColor = useColorModeValue('white', 'gray.700')
+    const inputColor = useColorModeValue('black', 'white')
+    const [userId, setUserId] = useState(null)
+    const [token, setToken] = useState(null)
+    const navigate = useNavigate()
 
     function validateName(value, name) {
         let error;
-
-        console.log('value', value)
-
         if (!value && name==='username') {
             error = 'Email is required'
         }
@@ -42,23 +45,29 @@ function Login() {
 
 
     const handleSubmit = async (values, actions) => {
-        const queryParams = new URLSearchParams({
+        const data = new URLSearchParams({
             username: values.username,
             password: values.password,
         });
 
         try {
-            console.log('values', values)
-          const response = await fetch(`http://127.0.0.1:8000/chat/login?${queryParams}`, {
-            method: 'GET', // Specify the HTTP method
+          const response = await fetch(`http://127.0.0.1:8000/chat/login`, {
+            method: 'POST', // Specify the HTTP method
             headers: {
               'Content-Type': 'application/json', // Set the content type
             },
-            // body: JSON.stringify(values), // Convert values to JSON and send as the request body
-          });
+            body: JSON.stringify(values), // Convert values to JSON and send as the request body
+          })
     
           if (response.ok) {
-            alert('Form submitted successfully');
+            const responseData = await response.json()
+            setUserId(responseData.user.id)
+            setToken(responseData.token)
+
+            SetCookie('userToken', token, 7)
+            
+            navigate('/chat')
+            
           } else {
             console.error('Error submitting form:', response.statusText);
           }
@@ -111,7 +120,8 @@ function Login() {
                         {({ field, form }) => (
                         <FormControl id='username'>
                             <FormLabel id="username"> Email Address</FormLabel>
-                            <Input {...field} type='email' />
+                            <Input {...field} type='email' 
+                            color={inputColor}/>
                         </FormControl>
                         )}
                     </Field>
@@ -119,7 +129,8 @@ function Login() {
                         {({ field, form }) => (
                         <FormControl id='password'>
                             <FormLabel id="password">Password</FormLabel>
-                            <Input {...field} type='password' />
+                            <Input {...field} type='password' 
+                            color={inputColor}/>
                         </FormControl>
                         )}
                     </Field>
@@ -159,8 +170,3 @@ function Login() {
 
 export default Login
 
-// export const loginLoader = async() => {
-//     const response = await fetch(`http://127.0.0.1:8000/chat/login`);
-//     const data = await response.json();
-//     return data;
-// }

@@ -1,168 +1,225 @@
 import {
-  Button,
-  Flex,
-  Grid, 
-  GridItem,
-  Text,
-  Textarea,
-  useColorModeValue,
-  } from '@chakra-ui/react'
-
-
-import { useLoaderData, useParams, useLocation } from "react-router-dom"
-
+    Button,
+    Flex,
+    Grid, 
+    GridItem,
+    Text,
+    Textarea,
+    useColorModeValue,
+    } from '@chakra-ui/react'
+  
 import {FaStop} from 'react-icons/fa'
 
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import {RepeatIcon} from "@chakra-ui/icons"
 
 import ResizeTextarea from "react-textarea-autosize"
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react"
 import BeatLoader from "react-spinners/BeatLoader"
 import Messages from '../../components/chat/Messages'
 import Sidebar from '../../components/chat/Sidebar';
 import { loadConvoMsg } from './loader'
-
+import { getCookie } from '../../cookieUtils'
 
 const CustomInput = forwardRef((props, ref) => {
-  return (
+return (
     <Textarea
-      minH="unset"
-      overflow="hidden"
-      w="80%"
-      resize="none"
-      ref={ref}
-      minRows={1}
-      as={ResizeTextarea}
-      {...props}
-      transition="height none"
-      placeholder='Your Question Here'
-  
+    minH="unset"
+    overflow="hidden"
+    w="80%"
+    resize="none"
+    ref={ref}
+    minRows={1}
+    as={ResizeTextarea}
+    {...props}
+    transition="height none"
+    placeholder='Your Question Here'
+
     />
-  );
+);
 });
 
-const Chat = () => {
-  const [messages, setMessages] = useState([]);
-  const [inputMessage, setInputMessage] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [isRegenerating, setIsRegenerating] = useState(false)
-  const [conversationId, setConversationId] = useState([])
-  const location = useLocation()
+const NewChat = () => {
+const [messages, setMessages] = useState([]);
+const [inputMessage, setInputMessage] = useState('')
+const [isLoading, setIsLoading] = useState(false)
+const [isRegenerating, setIsRegenerating] = useState(false)
+// const [conversationId, setConversationId] = useState(1)
+const {conversationId: conversationParam} = useParams()
+const [courseId, setCourseId] = useState(1)
+const location = useLocation()
+const navigate = useNavigate()
+const conversationId = parseInt(conversationParam)
+const userToken = getCookie('userToken')
 
-  // const { pageId } = useParams();
-  // const loaderFunction = loadConvoMsg({ courseId: 1, conversationId: pageId });
-  // const loadedData = useLoaderData(loaderFunction);
+useEffect(() => {
+    setMessages([])
+    console.log('changed conversationId')
+}, [conversationId])
 
-  // console.log('Loaded Data:', loadedData);
-
-  // const load = useLoaderData()
-  // console.log(load)
-  console.log(messages)
-  console.log(Array.isArray(messages))
-
-  const handleSendMessage = () => {
+const handleSendMessage = () => {
     if (!inputMessage.trim().length) {
-      return;
+    return;
     }
 
-    
-    const dataMsg = inputMessage
-    const data = {
-      sender: "user", 
-      content: dataMsg, 
-      conversation: '1'
-    }
+    //check if current location is /chat then create a new chat
+    if (location.pathname === '/chat') {
+        const data = {
+            title: "Created by Pressing new",
+            user: "1",
+            course: courseId,
+          }
 
-    setIsLoading(true)
+        console.log("entered the create new by sending message")
+        fetch(`http://127.0.0.1:8000/chat/course/${courseId}`, {
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            Authorization: `Token ${userToken}`,
+            body: JSON.stringify(data),
+          })
+            .then(response => response.json())
+            .then(data => {
+              // ... your existing code ...
+      
+              const newMsg = {
+                sender: "user",
+                content: inputMessage,
+                conversation: data.id,
+              };
+              const dataId = data.id;
+      
+              setIsLoading(true);
+              setIsRegenerating(true);
+
+              console.log('dataIdNewChat', dataId)
+      
+              fetch(`http://127.0.0.1:8000/chat/conversation/${data.id}`, {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                Authorization: `Token ${userToken}`,
+                body: JSON.stringify(newMsg),
+              })
+                .then(() => {
+                  setMessages(old => [...old, { sender: "user", content: inputMessage, conversation: dataId }]);
+                  setInputMessage("");
+                })
+                .then(() => {
+                  setTimeout(() => {
+                    setMessages(old => [...old, { sender: "OHPT", content: "reply", conversation: dataId }]);
+                    setIsLoading(false);
+                    setIsRegenerating(false);
+      
+                    // This part will execute after the new chat creation and message sending
+                    navigate(`/chat/conversation/${dataId}`);
+                  }, 1000);
+                });
+            });
+        } else {
+          // Existing chat message sending code
+          const data = {
+            sender: "user",
+            content: inputMessage,
+            conversation: conversationId,
+          };
+      
+          setIsLoading(true);
+          setIsRegenerating(true);
+      
+          fetch(`http://127.0.0.1:8000/chat/conversation/${conversationId}`, {
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            Authorization: `Token ${userToken}`,
+            body: JSON.stringify(data),
+          })
+            .then(() => {
+              setMessages(old => [...old, { sender: "user", content: inputMessage, conversation: conversationId }]);
+              setInputMessage("");
+            })
+            .then(() => {
+              setTimeout(() => {
+                setMessages(old => [...old, { sender: "OHPT", content: "reply", conversation: conversationId }]);
+                setIsLoading(false);
+                setIsRegenerating(false);
+              }, 1000);
+            });
+        }
+      };      
+
+    
+const handleRegenerate = () => {
     setIsRegenerating(true)
 
-    fetch(`http://127.0.0.1:8000/chat/conversation/${conversationId}`, {
-      method: 'POST',
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(data)
-    }).then(() => {
-      console.log('data added')
-      setMessages((old) => [...old, {sender: "user", content: inputMessage, conversation: '1'}])
-      // console.log()
-      setInputMessage("")
-
-    })
-
     setTimeout(() => {
-      setMessages((old) => [...old, { sender: "OHPT", content: "reply", conversation: '1' }]);
-      setIsLoading(false)
-      setIsRegenerating(false)
-    }, 1000);
-  }
+    setIsRegenerating(false)
+}, 1000)
+}
 
-  const handleRegenerate = () => {
-    setIsRegenerating(true)
+const SidebarColor = useColorModeValue("gray", "black")
+const TextColor = useColorModeValue('black', 'white')
 
-    setTimeout(() => {
-      setIsRegenerating(false)
-  }, 1000)
-  }
-
-  fetchData({conversationId: 1, courseId: null}).then((conversationData) => {
-    console.log("Conversation Data1:", conversationData);
-    const hello = conversationData
+const handleSidebarCourse = (sidebarCourseId) => {
+    setCourseId(sidebarCourseId)
     
-    // Now you can use conversationData outside the function scope
-  })
-  .catch((error) => {
-    // Handle the error
-    console.error("Error:", error);
-  });
+}
 
-  const SidebarColor = useColorModeValue("gray", "black")
-  const TextColor = useColorModeValue('black', 'white')
-
-  return (
+// const handleSidebarConvo = ({sidebarConvoId}) => {
+//     setConvoId(sidebarConvoId)
+    
+// }
+return (
     <Grid
-      templateColumns="1fr 7fr" 
-      gap={1}
-      style={{height: '100vh', maxHeight:'100vh'}}
+    templateColumns="1fr 4fr" 
+    gap={1}
+    style={{height: '100vh', maxHeight:'100vh', position: 'sticky', top: 0,
+        zIndex: 1,}}
     >
-      {/* Sidebar */}
-      <GridItem 
-          as="aside"
-          colSpan={1}
-          style={{ backgroundColor: SidebarColor,
-          // overflowY: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          // position: 'fixed',
+    {/* Sidebar */}
+    <GridItem 
+        as="aside"
+        colSpan={1}
+        style={{ backgroundColor: SidebarColor,
+        overflowY: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        // position: 'fixed',
         }}
-          p="30px">
+        p="30px">
 
+        {console.log('newChatConversationId', conversationId)}
         {/* Sidebar content */}
-        <Sidebar />
+        <Sidebar
+        sendSidebarCourseId={handleSidebarCourse}
+        convoId={conversationId}
+        />
+        
+    </GridItem>
 
-      </GridItem>
-
-      {/* Chatbox */}
-      <GridItem>
+    {/* Chatbox */}
+    <GridItem>
         <Flex 
-          className="chatbox-container"
-          flexDirection={"column"}
-          height="100%"
-          // overflowY={"scroll"}
+        className="chatbox-container"
+        flexDirection={"column"}
+        height="100%"
+        overflowY='auto'
         >
-          <Flex 
+        <Flex 
             className="messages-container"
             style = {{
-              flexGrow:1,
-              // overflowY:"scroll",
-              maxHeight:"100%",
-              padding:"10px",
-              overflowY: 'auto',
+            flexGrow:1,
+            // overflowY:"scroll",
+            maxHeight:"100%",
+            padding:"10px",
+            overflowY: 'auto',
             }}
             >
-            <Messages messages={messages}/>
-          </Flex>
+            {console.log("newChat", conversationId)}
+            <Messages 
+                messages={messages}
+            />
+        </Flex>
 
 
-          <Flex 
+        <Flex 
             className="input-buttons-container"
             alignItems="center"
             justifyContent="space-between"
@@ -172,40 +229,39 @@ const Chat = () => {
             style = {{position: 'sticky', bottom: '0'}}
             >
             <Flex w="100%" mt="5" flexDirection={"column"} >
-              <Flex
+            <Flex
                 className='RegenerateButton'
                 ml='auto'
                 // justifyContent={'center'}
                 mb={2}
                 >
                 <Button 
-                  // disabled={isRegenerating}
-                  // isLoadingText='Regenerating'
-                  colorScheme='teal'
-                  leftIcon={isRegenerating ? <FaStop /> : <RepeatIcon />}
-                  variant='outline'
-                  onClick={handleRegenerate}
-
+                // disabled={isRegenerating}
+                // isLoadingText='Regenerating'
+                colorScheme='teal'
+                leftIcon={isRegenerating ? <FaStop /> : <RepeatIcon />}
+                variant='outline'
+                onClick={handleRegenerate}
                 >
-                  {isRegenerating ? 'Stop': 'Regenerate'}    
-                      
+                {isRegenerating ? 'Stop': 'Regenerate'}    
+                    
                 </Button>
 
-              </Flex>
+            </Flex>
 
-              <Flex>
-              <CustomInput 
+            <Flex>
+            <CustomInput 
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && !isLoading) {
+                if (e.key === "Enter" && !isLoading) {
                     handleSendMessage();
                     e.preventDefault();
-                  }
+                }
                 }}
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 color= {TextColor}
-              />
-              <Button
+            />
+            <Button
                 bg="black"
                 color="white"
                 variant="outline"
@@ -218,43 +274,48 @@ const Chat = () => {
                 isLoading={isLoading}
                 disabled={inputMessage.trim().length <= 0 || isLoading}
                 onClick={handleSendMessage}
-              >
+            >
                 Send
-              </Button>
+            </Button>
 
-
-              </Flex>
 
             </Flex>
-          </Flex>
+            
+            
+
+            </Flex>
         </Flex>
-      </GridItem>
+        </Flex>
+    </GridItem>
     </Grid>
-          
+        
         
     )
-  }
+}
 
-  export default Chat
+export default NewChat
 
-  export async function fetchData({conversationId, courseId}) {
-    try {
-      console.log('conversationlog', conversationId)
-      const fetchData = null
-      if (conversationId) {
-        const fetchData = await loadConvoMsg({ conversationId: conversationId, courseId: courseId });
-        return fetchData
+export async function fetchData({conversationId, courseId}) {
+  try {
+    console.log('conversationlog', conversationId)
+    const fetchData = null
+    if (conversationId) {
+      const fetchData = await loadConvoMsg({ conversationId: conversationId, courseId: courseId });
+      return fetchData
 
-      }
-      else if (courseId) {
-        const fetchData = await loadConvoMsg({ conversationId: conversationId, courseId: courseId })
-        return fetchData
-      }
-      else {
-        return fetchData
-      }
-    } catch (error) {
-      console.error("Error loading conversation data:", error);
     }
+    else if (courseId) {
+      const fetchData = await loadConvoMsg({ conversationId: conversationId, courseId: courseId })
+      return fetchData
+    }
+    else {
+      return fetchData
+    }
+  } catch (error) {
+    console.error("Error loading conversation data:", error);
   }
+}
 
+
+  
+  

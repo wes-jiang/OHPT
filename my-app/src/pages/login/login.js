@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 import {
     Flex,
@@ -8,12 +8,13 @@ import {
     TabPanels,
     Tabs,
 } from '@chakra-ui/react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 import LoginCard from './loginCard'
-import Signup from './signup'
+import Signup from './signupCard'
 // import Signup from './newSignup'
 function Login() {
+    const navigate = useNavigate()
     return (
         <Flex
             align={'center'}
@@ -22,13 +23,16 @@ function Login() {
             <Tabs
                 isFitted
                 variant="enclosed"
+                defaultIndex={0}
             >
                 <TabList>
                     <Tab>
                         Login
                     </Tab>
 
-                    <Tab>
+                    <Tab
+                        onClick={() => navigate('/signup')}
+                    >
                         Sign up
                     </Tab>
 

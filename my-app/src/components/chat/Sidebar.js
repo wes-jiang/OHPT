@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Button,
+  Flex,
   HStack,
   Menu,
   MenuItem,
@@ -21,20 +22,10 @@ import { NavLink,
 import { loadConversations, loadConvoMsg } from "../../pages/chat/loader";
 import { fetchData } from "../../pages/chat/Chat";
 
-function sortConversationsByTime(conversations) {
-  return conversations.slice().sort((a, b) => {
-    console.log(a.time_started)
-    const timeA = new Date(a.time_started).getTime();
-    console.log('timeA', timeA)
-    const timeB = new Date(b.time_started).getTime();
-    return timeB - timeA;
-  });
-}
 
-
-const Sidebar = ({sendSidebarConvoId, sendSidebarCourseId}) => {
+const Sidebar = ({convoId, sendSidebarCourseId}) => {
   const [courseId, setCourseId] = useState(1);
-  const [conversationId, setConversationId] = useState(1)
+  // const [conversationId, setConversationId] = useState(convoId)
   const [menuItemText, setMenuItemText] = useState(
     <HStack spacing={2}>
       <SiAwslambda />
@@ -50,7 +41,7 @@ const Sidebar = ({sendSidebarConvoId, sendSidebarCourseId}) => {
   const handleClassClick = (newCourseId, newText) => {
     setMenuItemText(newText);
     setCourseId(newCourseId);
-    sendSidebarCourseId(courseId)
+    sendSidebarCourseId(newCourseId);
   };
 
   const createChat = ({ courseId }) => {
@@ -78,8 +69,6 @@ const Sidebar = ({sendSidebarConvoId, sendSidebarCourseId}) => {
       console.log("Time Started:", data.time_started);
       console.log("Title:", data.title);
 
-      setConversationId(data.id)
-      sendSidebarConvoId(conversationId)
       // Navigate to the new URL after creating the chat
       navigate(`/chat/conversation/${data.id}`);
 
@@ -91,96 +80,142 @@ const Sidebar = ({sendSidebarConvoId, sendSidebarCourseId}) => {
     fetchData({ conversationId: null, courseId: courseId })
       .then((fetchData) => {
         console.log("courseData fetchData:", fetchData);
-        const sortedData = sortConversationsByTime(fetchData)
-        console.log("courseData DataSideBar:", sortedData);
-        setLoadedData(sortedData); // No need for spread (...) here
-        console.log("loadSidebar", loadedData);
-        console.log("Time Started:", fetchData.time_started);
+        setLoadedData(fetchData); // No need for spread (...) here
+
       })
       .catch((error) => {
         console.error("Error:", error);
       });
 
       console.log('useEffect in Sidebar')
-  }, [conversationId, courseId]);
+  }, [convoId, courseId]);
+
+
 
 
   // const convos = useLoaderData(loadConvoMsg({ courseId: courseId, conversationId: "" }));
   return (
-    <div name="sidebar">
-      <Button
-        leftIcon={<AddIcon />}
-        colorScheme="white"
-        size="md"
-        padding="3"
-        variant="outline"
-        onClick={() => createChat({ courseId: courseId })}
-        style={{ marginBottom: "10px" }}
+    <div name='sidebar-container'
       >
-        Create
-      </Button>
-
-      <Menu>
-        <MenuButton
-          as={Button}
-          rightIcon={<ChevronDownIcon />}
-          _hover={{ bg: "gray.400" }}
-          _expanded={{ bg: "blue.400" }}
-          _focus={{ boxShadow: "outline" }}
-          transition="all 0.2s"
+      
+      <div name='sidebar'
+      >
+        <Button
+          leftIcon={<AddIcon />}
+          colorScheme="white"
+          size="md"
+          padding="3"
+          variant="outline"
+          onClick={() => createChat({ courseId: courseId })}
+          style={{ marginBottom: "10px" }}
         >
-          {menuItemText}
-        </MenuButton>
-        <MenuList>
-          <MenuItem
-            value="CS61A"
-            onClick={() =>
-              handleClassClick(1, (
+          Create
+        </Button>
+
+        <Flex>
+          <Menu>
+            <MenuButton
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+              _hover={{ bg: "gray.400" }}
+              _expanded={{ bg: "blue.400" }}
+              _focus={{ boxShadow: "outline" }}
+              transition="all 0.2s"
+              flex={1}
+            >
+              {menuItemText}
+            </MenuButton>
+            <MenuList>
+              <MenuItem
+                value="CS61A"
+                onClick={() =>
+                  handleClassClick(1, (
+                    <HStack spacing={2}>
+                      <SiAwslambda />
+                      <span> CS61A </span>
+                    </HStack>
+                  ))
+                }
+              >
                 <HStack spacing={2}>
                   <SiAwslambda />
                   <span> CS61A </span>
                 </HStack>
-              ))
-            }
-          >
-            <HStack spacing={2}>
-              <SiAwslambda />
-              <span> CS61A </span>
-            </HStack>
-          </MenuItem>
-          <MenuItem
-            value="CS161"
-            onClick={() =>
-              handleClassClick(2, (
+              </MenuItem>
+              <MenuItem
+                value="CS161"
+                onClick={() =>
+                  handleClassClick(2, (
+                    <HStack spacing={2}>
+                      <AiFillLock />
+                      <span> CS161 </span>
+                    </HStack>
+                  ))
+                }
+              >
                 <HStack spacing={2}>
                   <AiFillLock />
                   <span> CS161 </span>
                 </HStack>
-              ))
-            }
-          >
-            <HStack spacing={2}>
-              <AiFillLock />
-              <span> CS161 </span>
-            </HStack>
-          </MenuItem>
-        </MenuList>
-      </Menu>
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </Flex>
+        
+        <NavLink to={"/userProfileEdit"}>
+          <Button>Settings</Button>
+        </NavLink>
+        
+        {loadedData &&
+          loadedData.today_conversations.map((convo) => (
+            <div key={convo.id}>
+              <Text>Today</Text>
+              <React.Fragment key={convo.id}>
+                <Link to={`/chat/conversation/${convo.id}`}>
+                  <Text>{convo.title}</Text>
+                </Link>
+              </React.Fragment>
+            </div>
+          ))}
 
-      <NavLink to={"/userProfileEdit"}>
-        <Button>Settings</Button>
-      </NavLink>
+        {loadedData &&
+          loadedData.yesterday_conversations.map((convo) => (
+            <div key={convo.id}>
+              <Text>Yesterday</Text>
+              <React.Fragment key={convo.id}>
+                <Link to={`/chat/conversation/${convo.id}`}>
+                  <Text>{convo.title}</Text>
+                </Link>
+              </React.Fragment>
+            </div>
+          ))}
 
-      {loadedData &&
-        loadedData.map((convo) => (
-          <React.Fragment key={convo.id}>
-            <Link to={`/chat/conversation/${convo.id}`}>
-              <Text> {convo.title} </Text>
-            </Link>
-          </React.Fragment>
+        {loadedData &&
+          loadedData.past_seven_days_conversations.map((convo) => (
+            <div key={convo.id}>
+              <Text>Past Seven Days</Text>
+              <React.Fragment key={convo.id}>
+                <Link to={`/chat/conversation/${convo.id}`}>
+                  <Text>{convo.title}</Text>
+                </Link>
+              </React.Fragment>
+            </div>
+          ))}
+
+        {loadedData &&
+          loadedData.past_thirty_days_conversations.map((convo) => (
+            <div key={convo.id}>
+              <Text>Past Seven Days</Text>
+              <React.Fragment key={convo.id}>
+                <Link to={`/chat/conversation/${convo.id}`}>
+                  <Text>{convo.title}</Text>
+                </Link>
+              </React.Fragment>
+            </div>
         ))}
-    </div>
-  );
+        </div>
+      </div>
+  )
 };
 
 export default Sidebar;

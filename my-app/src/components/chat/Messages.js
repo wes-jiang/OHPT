@@ -13,6 +13,8 @@ import { useLoaderData, useParams } from "react-router-dom";
 import { loadConvoMsg, loadMessages } from "../../pages/chat/loader";
 
 import { fetchData } from "../../pages/chat/Chat";
+import StarButton from "../../pages/chat/StarButton";
+import SourceDrawer from "./SourceDrawer";
 
 const Messages = ({messages}) => {
     const chatContainerRef = useRef(null)
@@ -31,7 +33,6 @@ const Messages = ({messages}) => {
           });
       }, [conversationId]);
 
-    
 
   //Colors for the User
   const MsgUserBackColor = useColorModeValue("white", "dark-gray")
@@ -91,6 +92,7 @@ const Messages = ({messages}) => {
                 />
                 )}
                 <Flex>
+                  <StarButton favorite={msg.starred} messageId={msg.id}/>
                     <Text 
                         bg={isMyMessage ? MsgUserBackColor : MsgAssistBackColor}
                         color={isMyMessage ? MsgUserTextColor : MsgAssistTextColor}
@@ -101,9 +103,14 @@ const Messages = ({messages}) => {
                         wordBreak='break-word'
                         textAlign={isMyMessage ? 'right' : 'left'}
                         paddingRight={isMyMessage ? "4" : "4"}
+                        key={msg.id}
                     >
                         {msg.content}
                     </Text>
+                    {console.log("source", msg.sources)}
+                    <SourceDrawer sources={msg.sources}/>
+
+                    
 
                     {!isMyMessage && (
                         <Button leftIcon={<StarIcon />} />

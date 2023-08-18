@@ -6,6 +6,7 @@ import React, {useState} from 'react'
 // layouts
 import RootLayout from './layout/RootLayout'
 import HelpLayout from './layout/HelpLayout'
+import ChatLayout from './layout/ChatLayout'
 
 //pages
 import Home from './pages/Home'
@@ -15,7 +16,7 @@ import Contact from './pages/help/Contact'
 import FAQ from './pages/help/FAQ'
 import Chat from './pages/chat/Chat'
 import NotFound from './pages/NotFound'
-import NewChat from './pages/chat/newChat'
+import NewChat from './pages/chat/Chat'
 
 import Sidebar from './components/chat/Sidebar';
 import Messages from './components/chat/Messages';
@@ -25,6 +26,7 @@ import { loadConversations, loadMessages, loadConvoMsg } from './pages/chat/load
 import { 
   createBrowserRouter, 
   createRoutesFromElements, 
+  Routes,
   Route, 
   RouterProvider,
   useParams
@@ -37,6 +39,7 @@ import UserProfileEdit from './pages/login/userProfileEdit';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
+    <Route>
       <Route path="/" element={<RootLayout />}>
         <Route index element={<Home />} />
         <Route path="about" element={<About />} />
@@ -45,15 +48,22 @@ const router = createBrowserRouter(
           <Route path="faq" element={<FAQ />} />
           <Route path="contact" element={<Contact />} />
         </Route>
-        <Route path="chat" element={<NewChat />} />
-        <Route path='/chat/conversation/:conversationId' element={<NewChat />} />
+
         <Route path='login' element={<Login />} />
         <Route path='signup' element={<Signup />} />
         <Route path="forgotpass" element={<ForgotPass />} />
         <Route path="userProfileEdit" element={<UserProfileEdit />} />
 
         <Route path="*" element={<NotFound />} />
+
       </Route>
+
+      <Route path="/" element={<ChatLayout />}>
+        <Route index path="chat" element={<NewChat />} />
+        <Route path='chat/conversation/:conversationId' element={<NewChat />} />
+      </Route>
+    </Route>
+
   )
 )
 
