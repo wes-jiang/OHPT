@@ -45,26 +45,26 @@ function Login() {
 
 
     const handleSubmit = async (values, actions) => {
-        const data = new URLSearchParams({
-            username: values.username,
-            password: values.password,
-        });
+        console.log('values handleSubmit', values)
 
         try {
-          const response = await fetch(`http://127.0.0.1:8000/chat/login`, {
+          const response = await fetch('http://127.0.0.1:8000/chat/login', {
             method: 'POST', // Specify the HTTP method
             headers: {
               'Content-Type': 'application/json', // Set the content type
             },
             body: JSON.stringify(values), // Convert values to JSON and send as the request body
-          })
+            // credentials: 'include', // Include cookies in the request
+        })
     
           if (response.ok) {
             const responseData = await response.json()
+            console.log('responseData', responseData)
             setUserId(responseData.user.id)
-            setToken(responseData.token)
 
-            SetCookie('userToken', token, 7)
+            console.log('tokenValue', responseData.token)
+
+            SetCookie('userToken', responseData.token, 7)
             
             navigate('/chat')
             
@@ -73,7 +73,8 @@ function Login() {
           }
     
           actions.setSubmitting(false);
-        } catch (error) {
+        } 
+        catch (error) {
           console.error('Error submitting form:', error);
           actions.setSubmitting(false);
         }

@@ -131,5 +131,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOW_ORIGIN = ['http://localhost:3001']  # Replace with your frontend's domain
+CORS_ALLOW_CREDENTIALS = True  # Allow sending cookies with requests
+
+CORS_ALLOW_HEADERS = [
+    "Authorization",  # Allow Authorization header
+    "Content-Type"
+]
+
+# CORS_ALLOW_ORIGIN = ['http://localhost:3000', 'http://localhost:3000/chat']  # Replace with your frontend's domain
 

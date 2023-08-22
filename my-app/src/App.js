@@ -49,7 +49,7 @@ const router = createBrowserRouter(
           <Route path="contact" element={<Contact />} />
         </Route>
 
-        <Route path='login' element={<Login />} />
+        <Route path='chat/login' element={<Login />} />
         <Route path='signup' element={<Signup />} />
         <Route path="forgotpass" element={<ForgotPass />} />
         <Route path="userProfileEdit" element={<UserProfileEdit />} />

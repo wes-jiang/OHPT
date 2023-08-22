@@ -33,8 +33,6 @@ class Conversation(models.Model):
 def get_sources_default():
     return []
 class Message(models.Model):
-
-    
     sender = models.CharField(max_length=50)
     content = models.TextField()
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)

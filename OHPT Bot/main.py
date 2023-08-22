@@ -185,8 +185,3 @@ def contextualized_prompt(client, params, entity):
     prompt += params["query"]
     prompt += "?"
     return prompt
-
-if __name__ == '__main__':
-    className = '170'
-    q = 'dynamic programming'
-    main()

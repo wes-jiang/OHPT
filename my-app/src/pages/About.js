@@ -1,5 +1,6 @@
 import {
   Heading,
+  Text,
 } from '@chakra-ui/react'
 
 import React from 'react'
@@ -10,8 +11,10 @@ export default function About() {
     return (
       <div className="about">
         About
-        <VerifyEmail />
-        <UserProfileEdit />
+        {/* <VerifyEmail /> */}
+        {/* <UserProfileEdit /> */}
+
+        <Text>Applications</Text>
       </div>
     )
   }

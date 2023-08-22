@@ -25,10 +25,15 @@ Authorization: Token your_access_token
 }
 
 ###
+
+#Login to user
 POST http://127.0.0.1:8000/chat/login
 Content-Type: application/json 
 
-{"username": "kirby2liao@berkeley.edu", "password": "pass"}
+{"username": "annajiang19@gmail.com", "password": "IloveLyna"}
+
+###
+
 
 ###
 
@@ -43,23 +48,38 @@ Authorization: Token 554fece4e5f034eeb5d7ce114a809e7d8107a093
 #Get user_id
 GET http://127.0.0.1:8000/chat/get_user_id
 Content-Type: application/json
-Authorization: Token your_access_token
+Authorization: Token fac87371037d58346e477331746a589faeefdef7
 
 {}
+###
+
+#Get User's first & last name
+GET http://127.0.0.1:8000/chat/get_user_names
+Content-Type: application/json
+Authorization: Token fac87371037d58346e477331746a589faeefdef7
+
+###
+
+#Log out of user
+POST http://127.0.0.1:8000/chat/logout
+Authorization: Token fac87371037d58346e477331746a589faeefdef7
+
 ###
 
 #Create Conversation
 POST http://127.0.0.1:8000/chat/course/1
 Content-Type: application/json 
+Authorization: Token your_access_token
 
 {"title": "L", "user": 2, "course": 1}
 
 
 ###
 
-# Get list of conversations
+# Get list of conversations for THAT user
 GET http://127.0.0.1:8000/chat/course/1
 Content-Type: application/json 
+Authorization: Bearer fac87371037d58346e477331746a589faeefdef7
 
 {}
 

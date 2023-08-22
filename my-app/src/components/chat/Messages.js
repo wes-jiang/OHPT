@@ -2,7 +2,9 @@ import React, { useEffect, useState , useRef } from "react"
 import { Flex, 
     Text, 
     Avatar, 
+    Box,
     Button,
+    Container,
     useColorMode,
     useColorModeValue,
     } from "@chakra-ui/react"
@@ -13,25 +15,28 @@ import { useLoaderData, useParams } from "react-router-dom";
 import { loadConvoMsg, loadMessages } from "../../pages/chat/loader";
 
 import { fetchData } from "../../pages/chat/Chat";
-import StarButton from "../../pages/chat/StarButton";
+import StarButton from "./StarButton";
 import SourceDrawer from "./SourceDrawer";
 
 const Messages = ({messages}) => {
-    const chatContainerRef = useRef(null)
-    const [loadedData, setLoadedData] = useState(null)
-    const { conversationId } = useParams()
+  const chatContainerRef = useRef(null)
+  const [loadedData, setLoadedData] = useState([])
+  const { conversationId } = useParams()
     
-    console.log('messages33', conversationId)
-    useEffect(() => {
-        fetchData({ conversationId: conversationId, courseId: null })
-          .then((fetchData) => {
-            console.log("Conversation Data:", fetchData);
-            setLoadedData(fetchData);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      }, [conversationId]);
+  console.log('messages33', conversationId)
+  useEffect(() => {
+    if (typeof conversationId !== 'undefined') {
+      fetchData({ conversationId: conversationId, courseId: null })
+        .then((fetchData) => {
+          console.log("Conversation Data:", fetchData);
+          setLoadedData(fetchData);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+      
+    }, [conversationId]);
 
 
   //Colors for the User
@@ -51,16 +56,20 @@ const Messages = ({messages}) => {
 
   return (
     <Flex 
-        w="100%" 
-        h="100%" 
+        // w="100%" 
+        // h="100%" 
         overflowY="auto"
         flexDirection="column" 
-        p="2"
+        // p="2"
         // maxHeight= '100%'
-        // justifyContent="center" 
+        justifyContent="center" 
         // alignItems="center"
         >
       {AllMessages.map(msg => {
+         if (!loadedData) {
+          return <BeatLoader color="blue" loading={true} />;
+        }
+  
         const isMyMessage = msg.sender === "user"
           return (
             <Flex 
@@ -68,7 +77,7 @@ const Messages = ({messages}) => {
                 w="100%" 
                 flexDirection={isMyMessage ? "row-reverse" : "row"}
                 // alignItems= "center"
-                // justifyContent={"flex-start"}
+                // justifyContent={"center"}
                 my="1"
                 p="3"
                 borderRadius={"10px"}
@@ -79,6 +88,7 @@ const Messages = ({messages}) => {
                     <Avatar
                         name="OHPT"
                         margin="2"
+                        borderRadius={2}
                         size="md"
                         src="https://media.licdn.com/dms/image/C5603AQE8fCwomwCjhQ/profile-displayphoto-shrink_800_800/0/1662494019775?e=2147483647&v=beta&t=HqZoo89s5GDJlxpiPt1_pMYtElbK0HVXDOr9tEiu87I"
                     />
@@ -88,11 +98,13 @@ const Messages = ({messages}) => {
                 <Avatar 
                     name="Lyna"
                     size="md"
+                    borderRadius={2}
                     src="" 
                 />
                 )}
-                <Flex>
-                  <StarButton favorite={msg.starred} messageId={msg.id}/>
+                <Box width="50%">
+                <Flex className="Messages-star">
+                  <Flex flexDirection={'column'} alignItems={'flex-end'}>
                     <Text 
                         bg={isMyMessage ? MsgUserBackColor : MsgAssistBackColor}
                         color={isMyMessage ? MsgUserTextColor : MsgAssistTextColor}
@@ -101,22 +113,30 @@ const Messages = ({messages}) => {
                         mr="4"
                         overflowY="auto"
                         wordBreak='break-word'
-                        textAlign={isMyMessage ? 'right' : 'left'}
+                        // textAlign={isMyMessage ? 'right' : 'left'}
                         paddingRight={isMyMessage ? "4" : "4"}
                         key={msg.id}
                     >
                         {msg.content}
                     </Text>
-                    {console.log("source", msg.sources)}
-                    <SourceDrawer sources={msg.sources}/>
 
+                    <SourceDrawer 
+                      sources={msg.sources}
+                    />
+                  </Flex>
                     
-
                     {!isMyMessage && (
-                        <Button leftIcon={<StarIcon />} />
+                        <StarButton 
+                          favorite={msg.starred} 
+                          messageId={msg.id}
+                        />
                     )}
                 </Flex>
+                </Box>                
               </Flex>
+              
+
+              
           )
         })}
     </Flex>

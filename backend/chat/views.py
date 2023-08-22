@@ -15,7 +15,7 @@ from rest_framework.authtoken.models import Token
 
 from django.shortcuts import get_object_or_404
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 # authentication
 from rest_framework.decorators import authentication_classes, permission_classes
@@ -95,30 +95,78 @@ def test_token(request):
     return Response("passed for {}".format(request.user.username))
 
 
+
+def set_cookie(token):
+    # token, created = Token.objects.get_or_create(user=user)  # Replace with the correct attribute to access the token
+    print('hset_cookie token ', token)
+    response = HttpResponse("User token cookie set")
+    response.set_cookie('userToken', token, path='/')
+    return response
+    
+    
+
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_user_id(request):
     if request.user is not None:
+        # print(request.user)
         return Response(request.user.id)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_user_name(request):
+    if request.user is not None:
+        return Response([request.user.first_name, request.user.last_name])
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def login(request):
     user = get_object_or_404(User, username=request.data["username"])
-
+    print('user login', user)
     # validate password
     if not user.check_password(request.data["password"]):
+        print('login problem')
         # case where validation fails
         return Response({"detail": "not found."}, status=status.HTTP_404_NOT_FOUND)
     
     # retrieve token for this user
     token, created = Token.objects.get_or_create(user=user)
 
-    # get the serialized user instance to return in response
-    serializer = UserSerializer(instance=user)
+    response_data = {
+        "token": token.key,
+        "user": UserSerializer(instance=user).data
+    }
+
+    # Create a JSON response
+    response = JsonResponse(response_data)
+
+    # Set the 'bookname' cookie
+    # response['Access-Control-Allow-Origin'] = 'localhost:3000'
+    response.set_cookie('bookname', 'Sherlock Holmes', path='/chat', domain='localhost')
+
+    return response
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def logout(request):
+    print('user logout', request.user)
+
+    try:
+        token = Token.objects.get(user=request.user)
+        print('token in logout', token)
+        token.delete()
+    except Token.DoesNotExist:
+        pass
+
+    return Response(status=status.HTTP_200_OK)
+
     
-    return Response({"token": token.key, "user": serializer.data})
-        
 
 # /conversation/<int:pk>
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
@@ -145,7 +193,10 @@ def conversation_details(request, pk):
     # TODO: validate that conversation belongs to user
 
     if request.method == 'GET':
-        user = User.objects.get(pk=1)
+
+
+        # token = Token.objects.get(key=token_key)
+        # user = token.user
         conversation = Conversation.objects.get(pk=pk)
 
         messages = Message.objects.filter(conversation=conversation).order_by('time_sent')
@@ -192,12 +243,9 @@ def conversation_details(request, pk):
         
 
 
-# @api_view(['GET', 'POST'])
-# def conversation_list(request):
-
 # '/course/<int:pk>'
 @csrf_exempt
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'OPTIONS'])
 def course_conversations(request, pk):
     """
     get all conversations (their IDs + their names) from specified course, then serialize them
@@ -208,8 +256,28 @@ def course_conversations(request, pk):
         {"title": ____, "id": _____}
     ]
     """
-    # return HttpResponse('<h1> hello </h1>')
+    if request.method == "OPTIONS":
+        response = HttpResponse(status=204)
+        response["Access-Control-Allow-Origin"] = "http://localhost:3000"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"  # Add other allowed methods
+        response["Access-Control-Allow-Headers"] = "Authorization"  # Allow the required header
+        return response
     if request.method == 'GET':
+        token_header = request.META.get('HTTP_AUTHORIZATION')
+        print('token_header in course', token_header)
+
+        if token_header and token_header.startswith('Bearer '):
+            token_key = token_header.split('Bearer ')[1]
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try: 
+            token = Token.objects.get(key=token_key)
+            user = token.user
+
+        except Token.DoesNotExist:
+            return None 
+
         course = Course.objects.get(pk=pk)
         today = timezone.now().date()
         yesterday = today - timedelta(days=1)
@@ -217,16 +285,16 @@ def course_conversations(request, pk):
         thirty_days_ago = today - timedelta(days=30)
         # conversation_list = Conversation.objects.filter(course=course).order_by('-time_started')
 
-        conversation_list = Conversation.objects.filter(course=course)
-        today_conversations = conversation_list.filter(time_started__date=today)
-        yesterday_conversations = conversation_list.filter(time_started__date=yesterday)
+        conversation_list = Conversation.objects.filter(user=user.id).filter(course=course)
+        today_conversations = conversation_list.filter(time_started__date=today).order_by('-time_started')
+        yesterday_conversations = conversation_list.filter(time_started__date=yesterday).order_by('-time_started')
 
-        past_seven_days_conversations = Conversation.objects.filter(
+        past_seven_days_conversations = conversation_list.filter(
             time_started__date__range=[seven_days_ago, yesterday]
-            )
-        past_thirty_days_conversations = Conversation.objects.filter(
+            ).order_by('-time_started')
+        past_thirty_days_conversations = conversation_list.filter(
             time_started__date__range=[thirty_days_ago, yesterday]
-            )
+            ).order_by('-time_started')
 
         today_serializer = ConversationSerializer(today_conversations, many=True)
         yesterday_serializer = ConversationSerializer(yesterday_conversations, many=True)
@@ -267,7 +335,7 @@ def edit_star(request, pk):
     # get message associated with the passed in pk
     # pk = request.data.get("pk")
     try:
-        message = Message.objects.get(pk=pk) 
+        message = Message.objects.get(id=pk) 
         print('request', pk)
     
     except Message.DoesNotExist:
@@ -283,4 +351,17 @@ def edit_star(request, pk):
 
     serializer = MessageSerializer(message, many=None)
     return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+
+@api_view(['GET'])
+def stats():
+    total_messages = Message.objects.count()
+    total_conversations = Conversation.objects.count()
+    total_users = User.objects.count()
+
+    return Response([total_messages, total_conversations, total_users])
+
+
+@api_view(['POST'])
+def feedback(request):
+    return Response()
         

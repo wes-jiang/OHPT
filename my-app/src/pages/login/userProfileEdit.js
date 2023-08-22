@@ -45,14 +45,6 @@ function UserProfileEdit() {
                         </Center>
                     </Stack>
                 </FormControl>
-                <FormControl id='userName' isRequired>
-                    <FormLabel>Username</FormLabel>
-                    <Input
-                        placeholder='Username'
-                        _placeholder={{color: 'gray.500'}}
-                        type='text'
-                    />
-                </FormControl>
                 <FormControl id='email' isRequired>
                     <FormLabel>Email Address</FormLabel>
                     <Input

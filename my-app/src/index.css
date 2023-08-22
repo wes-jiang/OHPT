@@ -6,9 +6,7 @@
   --background: var(--white);
   --foreground: var(--black);
   --primary: #000000;
-  --primary: #363e47;
   --secondary: #fff;
-  --secondary: #dadada;
   --accent-light: #f4faa6;
   --primary-dark: #D3D3D3;
   --secondary-dark: #121212;
@@ -20,7 +18,7 @@
 
 body {
   margin: 0;
-  font-family: "Poppins";
+  font-family: Poppins;
   /* background: var(--secondary); */
 }
 * {
@@ -36,10 +34,10 @@ html {
 }
 
 html::before {
-  content: "";
-  position: fixed;
-  height: 100%;
-  width: 100%;
+  /* content: ""; */
+  /* position: fixed; */
+  /* height: 100%; */
+  /* width: 100%; */
   background: var(--black);
   transform: translateX(-100%);
   transition: transform var(--transition);
@@ -142,13 +140,6 @@ form label span {
   margin-bottom: 10px;
 }
 
-/* chat */
-
-
-
-/* chat sidebar */
-
-
 /* toggle */
 .hidden {
   clip: rect(0 0 0 0);
@@ -209,7 +200,7 @@ form label span {
   justify-content: space-between;
   align-items: center;
   height: 100%;
-  margin: 0 5px;
+  margin: 0 '5px';
 }
 
 .toggle .icons svg {
@@ -221,24 +212,105 @@ form label span {
 }
 
 
-/*Sidebar */
-.sidebar-container {
-  position: relative;
-  width: 300px; /* Adjust the width as needed */
+/*Chatbox */
+.chatbox {
+  /* flex-grow: 1; */
+  /* overflow-y: auto; */
+  /* padding: 10px; */
+  /* overflow-y: hidden; */
   height: 100vh;
-  overflow: hidden; /* Hide any overflow beyond the sidebar container */
-  border-right: 1px solid #ddd;
+  /* position: sticky; */
+
+  /* display: 'flex'; */
+  /* flex-direction: column; */
+  /* align-items: center; */
+  /* justify-content: center; */
+  /* height: 100%; */
+  /* width: 100%;  */
 }
 
+.chatbox-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  /* height: 100vh; */
+  width: 100%;
+  /* height: 100%; */
+  /* width: 100%; */
+  overflow-y:scroll;
+  position:relative;
+}
+.messages-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
+
+  /* display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1; */
+  /* overflow-y: auto; */
+  /* padding: 10px; */
+  
+}
+
+.input-buttons-container {
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  width: 100%;
+  z-index: 1;
+  position: sticky;
+  bottom: 0;
+}
+
+/*Sidebar */
+/* Greatest level */
+.sidebar-grid {
+  height: 100%;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  /* background-color: var(--accent-dark); */
+}
+
+
+.sidebar-container {
+  /* overflow-y: auto; */
+  position: -webkit-sticky;
+  position: sticky;
+
+}
 .sidebar {
   height: 100%; /* Occupy full height of sidebar container */
-  overflow-y: auto; /* Enable scrolling within the sidebar */
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+}
+
+.sidebar-buttons {
+  display: flex;
+  flex-direction: column;
+} 
+.convo-list {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: sticky;
+  overflow-y: auto;
+}
+
+.sidebar-settings {
+  /* position: -webkit-sticky; */
+  /* position: sticky; */
+  bottom: 0;
 }
 
 /* Custom styles for the scrollbar */
 .sidebar::-webkit-scrollbar {
-  width: 8px; /* Width of the scrollbar */
+  width: 1px; /* Width of the scrollbar */
 }
 
 .sidebar::-webkit-scrollbar-track {
@@ -248,4 +320,10 @@ form label span {
 .sidebar::-webkit-scrollbar-thumb {
   background: #888; /* Color of the scrollbar thumb */
   border-radius: 4px; /* Rounded corners for the scrollbar thumb */
+}
+
+.sidebar-dates {
+  margin-top: 20px;
+  color: gray;
+  text-align: left;
 }

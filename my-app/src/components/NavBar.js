@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useLocation } from "react-router-dom"
-import React from "react"
+import React, { useEffect, useState } from "react"
 
 import { Button, 
   Collapse,
@@ -8,6 +8,7 @@ import { Button,
 
 
 import ThemeToggle from "./ThemeToggle"
+import { getCookie } from "../cookieUtils";
 
 export default function NavBar({isVisible}) {
   const { colorMode } = useColorMode();
@@ -26,6 +27,26 @@ export default function NavBar({isVisible}) {
   const location = useLocation()
   const visiblePaths = ['/', '/about', '/help', '/team', '/chat', '/login']
   const checkNavPath = visiblePaths.includes(location.pathname)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const userToken = getCookie("userToken");
+    if (userToken) {
+      fetch("http://127.0.0.1:8000/chat/validate", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${userToken}`,
+        },
+      })
+        .then((response) => response.ok)
+        .then((isOk) => setIsLoggedIn(isOk))
+        .catch((error) => {
+          console.error("Error validating user:", error);
+        });
+    }
+  }, []);
+  
   return (
       <div className="navbar"
       >
@@ -40,9 +61,11 @@ export default function NavBar({isVisible}) {
               <NavLink to="team">Team</NavLink>
               <NavLink to="chat">Chat</NavLink>
               <ThemeToggle />
-              <NavLink to='login'>
-                <Button> Login </Button>
-              </NavLink>
+              {!isLoggedIn && (
+                <NavLink to="chat/login">
+                  <Button> Login </Button>
+                </NavLink>
+              )}
             </nav>
           </Collapse>
         </header>

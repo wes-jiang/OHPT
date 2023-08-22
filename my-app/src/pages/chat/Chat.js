@@ -18,7 +18,7 @@ import React, { forwardRef, useEffect, useState } from "react"
 import BeatLoader from "react-spinners/BeatLoader"
 import Messages from '../../components/chat/Messages'
 import Sidebar from '../../components/chat/Sidebar';
-import { loadConvoMsg } from './loader'
+import { loadConvoMsg, loadUserId } from './loader'
 import { getCookie } from '../../cookieUtils'
 
 const CustomInput = forwardRef((props, ref) => {
@@ -34,6 +34,7 @@ return (
     {...props}
     transition="height none"
     placeholder='Your Question Here'
+    variant={'filled'}
 
     />
 );
@@ -44,13 +45,13 @@ const [messages, setMessages] = useState([]);
 const [inputMessage, setInputMessage] = useState('')
 const [isLoading, setIsLoading] = useState(false)
 const [isRegenerating, setIsRegenerating] = useState(false)
-// const [conversationId, setConversationId] = useState(1)
 const {conversationId: conversationParam} = useParams()
 const [courseId, setCourseId] = useState(1)
 const location = useLocation()
 const navigate = useNavigate()
 const conversationId = parseInt(conversationParam)
 const userToken = getCookie('userToken')
+let userId
 
 useEffect(() => {
     setMessages([])
@@ -63,57 +64,79 @@ const handleSendMessage = () => {
     }
 
     //check if current location is /chat then create a new chat
+
+    console.log('location pathname', location.pathname)
     if (location.pathname === '/chat') {
-        const data = {
-            title: "Created by Pressing new",
-            user: "1",
-            course: courseId,
+      const userToken = getCookie('userToken')
+      fetch('http://127.0.0.1:8000/chat/get_user_id', {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${userToken}` // Replace with your actual user token
+      }
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
           }
+          return response.json();
+      })
+      .then(data => {
+        userId = data
+        const request = {
+          title: "Created by Pressing new",
+          user: userId, //must be user's id
+          course: courseId,
+        }
 
         console.log("entered the create new by sending message")
-        fetch(`http://127.0.0.1:8000/chat/course/${courseId}`, {
-            method: 'POST',
-            headers: { "Content-Type": "application/json" },
-            Authorization: `Token ${userToken}`,
-            body: JSON.stringify(data),
-          })
-            .then(response => response.json())
-            .then(data => {
-              // ... your existing code ...
-      
-              const newMsg = {
-                sender: "user",
-                content: inputMessage,
-                conversation: data.id,
-              };
-              const dataId = data.id;
-      
-              setIsLoading(true);
-              setIsRegenerating(true);
+      fetch(`http://127.0.0.1:8000/chat/course/${courseId}`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': "application/json",
+            'Authorization': `Bearer ${userToken}` 
+          },
+          body: JSON.stringify(request),
+        })
+          .then(response => response.json())
+          .then(data => {
+    
+            const newMsg = {
+              sender: "user",
+              content: inputMessage,
+              conversation: data.id,
+            };
+            const dataId = data.id;
+    
+            setIsLoading(true);
+            setIsRegenerating(true);
 
-              console.log('dataIdNewChat', dataId)
-      
-              fetch(`http://127.0.0.1:8000/chat/conversation/${data.id}`, {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                Authorization: `Token ${userToken}`,
-                body: JSON.stringify(newMsg),
+            console.log('dataIdNewChat', dataId)
+    
+            fetch(`http://127.0.0.1:8000/chat/conversation/${data.id}`, {
+              method: 'POST',
+              headers: { "Content-Type": "application/json" },
+              Authorization: `Token ${userToken}`,
+              body: JSON.stringify(newMsg),
+            })
+              .then(() => {
+                setMessages(old => [...old, { sender: "user", content: inputMessage, conversation: dataId }]);
+                setInputMessage("");
               })
-                .then(() => {
-                  setMessages(old => [...old, { sender: "user", content: inputMessage, conversation: dataId }]);
-                  setInputMessage("");
-                })
-                .then(() => {
-                  setTimeout(() => {
-                    setMessages(old => [...old, { sender: "OHPT", content: "reply", conversation: dataId }]);
-                    setIsLoading(false);
-                    setIsRegenerating(false);
+              .then(() => {
+                setTimeout(() => {
+                  setMessages(old => [...old, { sender: "OHPT", content: "reply", conversation: dataId }]);
+                  setIsLoading(false);
+                  setIsRegenerating(false);
+    
+                  // This part will execute after the new chat creation and message sending
+                  navigate(`/chat/conversation/${dataId}`);
+                }, 1000);
+              });
+          });
+
+      })
       
-                    // This part will execute after the new chat creation and message sending
-                    navigate(`/chat/conversation/${dataId}`);
-                  }, 1000);
-                });
-            });
         } else {
           // Existing chat message sending code
           const data = {
@@ -167,67 +190,46 @@ const handleSidebarCourse = (sidebarCourseId) => {
     
 // }
 return (
+  <div className="grid-wrapper">
     <Grid
     templateColumns="1fr 4fr" 
     gap={1}
-    style={{height: '100vh', maxHeight:'100vh', position: 'sticky', top: 0,
+    style={{height: '100vh', 
+      maxHeight:'100vh',
+      overflowY: 'auto',
         zIndex: 1,}}
     >
     {/* Sidebar */}
     <GridItem 
-        as="aside"
-        colSpan={1}
-        style={{ backgroundColor: SidebarColor,
-        overflowY: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        // position: 'fixed',
-        }}
-        p="30px">
+      className='sidebar-grid'
+      as="aside"
+      colSpan={1}
+      backgroundColor={SidebarColor}
+      p="30px">
 
-        {console.log('newChatConversationId', conversationId)}
-        {/* Sidebar content */}
+      {console.log('newChatConversationId', conversationId)}
+      {/* Sidebar content */}
+      <Flex className='sidebar-flex'>
         <Sidebar
         sendSidebarCourseId={handleSidebarCourse}
         convoId={conversationId}
-        />
+        style={{position: 'sticky'}}
+          />
+      </Flex>
         
     </GridItem>
 
     {/* Chatbox */}
     <GridItem>
-        <Flex 
-        className="chatbox-container"
-        flexDirection={"column"}
-        height="100%"
-        overflowY='auto'
-        >
-        <Flex 
-            className="messages-container"
-            style = {{
-            flexGrow:1,
-            // overflowY:"scroll",
-            maxHeight:"100%",
-            padding:"10px",
-            overflowY: 'auto',
-            }}
-            >
-            {console.log("newChat", conversationId)}
-            <Messages 
-                messages={messages}
-            />
-        </Flex>
+        <Flex className="chatbox-container">
+          <Flex className="messages-container">
+              <Messages 
+                  messages={messages}
+              />
+          </Flex>
 
 
-        <Flex 
-            className="input-buttons-container"
-            alignItems="center"
-            justifyContent="space-between"
-            padding="10px" // Add your spacing here
-            width="100%"
-            zIndex="1"
-            style = {{position: 'sticky', bottom: '0'}}
-            >
+        <Flex className="input-buttons-container">
             <Flex w="100%" mt="5" flexDirection={"column"} >
             <Flex
                 className='RegenerateButton'
@@ -288,6 +290,7 @@ return (
         </Flex>
     </GridItem>
     </Grid>
+    </div>
         
         
     )
@@ -296,6 +299,8 @@ return (
 export default NewChat
 
 export async function fetchData({conversationId, courseId}) {
+
+  console.log(`fetchdata: convo ${conversationId} & course ${courseId}`)
   try {
     console.log('conversationlog', conversationId)
     const fetchData = null
@@ -313,6 +318,16 @@ export async function fetchData({conversationId, courseId}) {
     }
   } catch (error) {
     console.error("Error loading conversation data:", error);
+
+  }
+}
+
+export async function fetchUserId() {
+  try {
+    const userId = await loadUserId()
+    return userId
+  } catch (error) {
+    console.error("error in loading user id")
   }
 }
 
